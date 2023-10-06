@@ -11,16 +11,16 @@ type EnvConfig struct {
 	ProjectPort string
 }
 
-func LoadEnv() (*EnvConfig, error) {
+func LoadEnv() *EnvConfig {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
-		return nil, err
+		os.Exit(2)
 	}
 
 	config := &EnvConfig{
 		ProjectPort: os.Getenv("PROJECT_PORT"),
 	}
 
-	return config, nil
+	return config
 }

@@ -9,7 +9,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	envConfig, _ := env.LoadEnv()
+	envConfig := env.LoadEnv()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
