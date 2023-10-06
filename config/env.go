@@ -1,4 +1,4 @@
-package env
+package config
 
 import (
 	"log"
@@ -8,7 +8,12 @@ import (
 )
 
 type EnvConfig struct {
-	ProjectPort string
+	ProjectPort   string
+	MySQLHost     string
+	MySQLPort     string
+	MySQLUser     string
+	MySQLPassword string
+	MySQLDatabase string
 }
 
 func LoadEnv() *EnvConfig {
@@ -18,8 +23,19 @@ func LoadEnv() *EnvConfig {
 		os.Exit(2)
 	}
 
+	// MySQLPort, err := strconv.Atoi(os.Getenv("MYSQL_PORT"))
+	// if err != nil {
+	// 	panic(err)
+	// }
+
 	config := &EnvConfig{
 		ProjectPort: os.Getenv("PROJECT_PORT"),
+		MySQLHost:   os.Getenv("MYSQL_HOST"),
+		// MySQLPort:     MySQLPort,
+		MySQLPort:     os.Getenv("MYSQL_PORT"),
+		MySQLUser:     os.Getenv("MYSQL_USER"),
+		MySQLPassword: os.Getenv("MYSQL_PASSWORD"),
+		MySQLDatabase: os.Getenv("MYSQL_DB_NAME"),
 	}
 
 	return config
