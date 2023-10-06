@@ -1,13 +1,19 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	env "explore-gofiber/config"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 	app := fiber.New()
+
+	envConfig, _ := env.LoadEnv()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
-	app.Listen(":3000")
+	app.Listen(":" + envConfig.ProjectPort)
 }
