@@ -3,6 +3,7 @@ package main
 import (
 	database "explore-gofiber/config"
 	env "explore-gofiber/config"
+	"explore-gofiber/router"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,9 +14,7 @@ func main() {
 
 	envConfig := env.LoadEnv()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	router.SetUpRoutes(app)
 
 	app.Listen(":" + envConfig.ProjectPort)
 }
