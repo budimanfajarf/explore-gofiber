@@ -1,8 +1,13 @@
 package article
 
+import (
+	"explore-gofiber/models"
+)
+
 // Article model
 type Article struct {
-	ID      uint   `json:"id"`
+	models.Base
+
 	Title   string `json:"title"`
 	Content string `json:"content"`
 	Image   string `json:"image"`
