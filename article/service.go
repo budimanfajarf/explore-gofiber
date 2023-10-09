@@ -9,7 +9,10 @@ import (
 func GetArticles(ctx *fiber.Ctx) error {
 	articles := []Article{}
 
-	database.DBConn.Find(&articles)
+	err := database.DBConn.Find(&articles).Error
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(200).JSON(articles)
 }

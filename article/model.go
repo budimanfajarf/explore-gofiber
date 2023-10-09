@@ -2,17 +2,17 @@ package article
 
 // Article model
 type Article struct {
-	id      uint
-	title   string
-	content string
-	image   string
+	ID      uint   `json:"id"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Image   string `json:"image"`
 }
 
 type Tabler interface {
 	TableName() string
 }
 
-// TableName overrides the table name used by User to `profiles`
+// TableName overrides the table name used by User to `Article`
 func (Article) TableName() string {
 	return "Article"
 }
