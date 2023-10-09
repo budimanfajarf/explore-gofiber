@@ -7,12 +7,13 @@ import (
 )
 
 func GetArticles(ctx *fiber.Ctx) error {
-	articles := []Article{}
+	// Method 1: get all columns
+	// articles := []Article{}
+	// database.DBConn.Find(&articles)
 
-	err := database.DBConn.Find(&articles).Error
-	if err != nil {
-		return err
-	}
+	// Method 2: get specific columns
+	articles := []GetArticlesItemAPI{}
+	database.DBConn.Model(&Article{}).Find(&articles)
 
 	return ctx.Status(200).JSON(articles)
 }
