@@ -1,6 +1,7 @@
-package config
+package database
 
 import (
+	"explore-gofiber/config"
 	"log"
 
 	"gorm.io/driver/mysql"
@@ -9,12 +10,10 @@ import (
 )
 
 var (
-	DBConn *gorm.DB
+	MySQL *gorm.DB
 )
 
-func ConnectDb() {
-	envConfig := LoadEnv()
-
+func ConnectMySQL(envConfig *config.EnvConfig) {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	dsn := envConfig.MySQLUser + ":" + envConfig.MySQLPassword + "@tcp(" + envConfig.MySQLHost + ":" + envConfig.MySQLPort + ")/" + envConfig.MySQLDatabase + "?charset=utf8mb4&parseTime=True&loc=Local"
 	/*
@@ -31,5 +30,5 @@ func ConnectDb() {
 	}
 
 	log.Println("Connected to database")
-	DBConn = db
+	MySQL = db
 }

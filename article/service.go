@@ -1,19 +1,19 @@
 package article
 
 import (
-	"explore-gofiber/config"
+	"explore-gofiber/database"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetArticles(ctx *fiber.Ctx) error {
-	// Method 1: get all columns
+	// // Method 1: get all columns
 	// articles := []Article{}
-	// database.DBConn.Find(&articles)
+	// database.MySQL.Find(&articles)
 
 	// Method 2: get specific columns
 	articles := []GetArticlesItemAPI{}
-	config.DBConn.Model(&Article{}).Find(&articles)
+	database.MySQL.Model(&Article{}).Find(&articles)
 
 	return ctx.Status(200).JSON(articles)
 }
