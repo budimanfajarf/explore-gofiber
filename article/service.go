@@ -1,7 +1,7 @@
 package article
 
 import (
-	database "explore-gofiber/config"
+	"explore-gofiber/config"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,7 +13,7 @@ func GetArticles(ctx *fiber.Ctx) error {
 
 	// Method 2: get specific columns
 	articles := []GetArticlesItemAPI{}
-	database.DBConn.Model(&Article{}).Find(&articles)
+	config.DBConn.Model(&Article{}).Find(&articles)
 
 	return ctx.Status(200).JSON(articles)
 }
