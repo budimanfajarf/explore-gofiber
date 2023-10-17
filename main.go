@@ -13,8 +13,6 @@ func main() {
 	database.Connect(envConfig)
 
 	app := fiber.New()
-
 	router.SetUpRoutes(app)
-
 	app.Listen(":" + envConfig.ProjectPort)
 }
