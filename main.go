@@ -9,10 +9,9 @@ import (
 )
 
 func main() {
-	envConfig := config.LoadEnv()
-	database.Connect(envConfig)
-
+	env := config.LoadEnv()
+	database.Connect(env)
 	app := fiber.New()
 	router.SetUpRoutes(app)
-	app.Listen(":" + envConfig.ProjectPort)
+	app.Listen(":" + env.ProjectPort)
 }

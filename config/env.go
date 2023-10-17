@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type EnvConfig struct {
+type IEnv struct {
 	ProjectPort   string
 	MySQLHost     string
 	MySQLPort     string
@@ -16,7 +16,7 @@ type EnvConfig struct {
 	MySQLDatabase string
 }
 
-func LoadEnv() *EnvConfig {
+func LoadEnv() *IEnv {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -27,7 +27,7 @@ func LoadEnv() *EnvConfig {
 	// 	panic(err)
 	// }
 
-	config := &EnvConfig{
+	config := &IEnv{
 		ProjectPort: os.Getenv("PROJECT_PORT"),
 		MySQLHost:   os.Getenv("MYSQL_HOST"),
 		// MySQLPort:     MySQLPort,

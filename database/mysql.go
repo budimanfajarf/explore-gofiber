@@ -13,9 +13,9 @@ var (
 	MySQL *gorm.DB
 )
 
-func ConnectMySQL(envConfig *config.EnvConfig) {
+func ConnectMySQL(env *config.IEnv) {
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
-	dsn := envConfig.MySQLUser + ":" + envConfig.MySQLPassword + "@tcp(" + envConfig.MySQLHost + ":" + envConfig.MySQLPort + ")/" + envConfig.MySQLDatabase + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := env.MySQLUser + ":" + env.MySQLPassword + "@tcp(" + env.MySQLHost + ":" + env.MySQLPort + ")/" + env.MySQLDatabase + "?charset=utf8mb4&parseTime=True&loc=Local"
 	/*
 		NOTE:
 		To handle time.Time correctly, you need to include parseTime as a parameter. (more parameters)
