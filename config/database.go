@@ -2,7 +2,6 @@ package config
 
 import (
 	"log"
-	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -29,7 +28,6 @@ func ConnectDb() {
 
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
-		os.Exit(2)
 	}
 
 	log.Println("Connected to database")
