@@ -1,5 +1,5 @@
 package article
 
-func GetArticleList() []GetArticleListItem {
+func GetArticleList() []IArticleListItem {
 	return GetArticleListData()
 }
