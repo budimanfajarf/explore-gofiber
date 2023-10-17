@@ -14,5 +14,5 @@ func SetupRoutesV1(app *fiber.App) {
 		return c.Next()
 	})
 
-	v1.Get("/articles", article.GetArticles)
+	v1.Get("/articles", article.GetArticleListHandler)
 }

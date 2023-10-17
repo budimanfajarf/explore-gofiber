@@ -1,12 +1,12 @@
 package article
 
 import (
-	"explore-gofiber/models"
+	"explore-gofiber/common"
 )
 
 // Article model
 type Article struct {
-	models.Base
+	common.BaseModel
 
 	Title   string `json:"title"`
 	Content string `json:"content"`
