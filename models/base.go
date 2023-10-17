@@ -1,8 +1,8 @@
-package common
+package models
 
 import "time"
 
-type BaseModel struct {
+type Base struct {
 	ID        uint      `gorm:"primarykey" json:"id"`
 	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"column:updatedAt" json:"updatedAt"`
