@@ -13,7 +13,9 @@ var (
 	MySQL *gorm.DB
 )
 
-func ConnectMySQL(env *config.IEnv) {
+func ConnectMySQL() {
+	env := config.Env
+
 	// refer https://github.com/go-sql-driver/mysql#dsn-data-source-name for details
 	dsn := env.MySQLUser + ":" + env.MySQLPassword + "@tcp(" + env.MySQLHost + ":" + env.MySQLPort + ")/" + env.MySQLDatabase + "?charset=utf8mb4&parseTime=True&loc=Local"
 	/*

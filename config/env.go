@@ -16,6 +16,8 @@ type IEnv struct {
 	MySQLDatabase string
 }
 
+var Env *IEnv
+
 func LoadEnv() *IEnv {
 	err := godotenv.Load()
 	if err != nil {
@@ -27,7 +29,7 @@ func LoadEnv() *IEnv {
 	// 	panic(err)
 	// }
 
-	config := &IEnv{
+	Env = &IEnv{
 		ProjectPort: os.Getenv("PROJECT_PORT"),
 		MySQLHost:   os.Getenv("MYSQL_HOST"),
 		// MySQLPort:     MySQLPort,
@@ -37,5 +39,5 @@ func LoadEnv() *IEnv {
 		MySQLDatabase: os.Getenv("MYSQL_DB_NAME"),
 	}
 
-	return config
+	return Env
 }
