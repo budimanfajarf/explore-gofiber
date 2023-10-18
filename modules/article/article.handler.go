@@ -2,18 +2,18 @@ package article
 
 import "github.com/gofiber/fiber/v2"
 
-type articleHandler struct {
-	articleService IArticleService
+type Handler struct {
+	service IService
 }
 
-func NewArticleHandler(articleService IArticleService) *articleHandler {
-	return &articleHandler{
-		articleService,
+func NewHandler(service IService) *Handler {
+	return &Handler{
+		service,
 	}
 }
 
-func (h *articleHandler) GetList(ctx *fiber.Ctx) error {
-	data, _ := h.articleService.GetList()
+func (h *Handler) GetList(ctx *fiber.Ctx) error {
+	data, _ := h.service.GetList()
 
 	return ctx.Status(200).JSON(data)
 }

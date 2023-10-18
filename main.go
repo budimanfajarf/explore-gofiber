@@ -15,10 +15,10 @@ func main() {
 
 	app := fiber.New()
 
-	articleRepository := article.NewArticleRepository(db)
-	articleService := article.NewArticleService(articleRepository)
+	articleRepository := article.NewRepository(db)
+	articleService := article.NewService(articleRepository)
 
-	articleHandler := article.NewArticleHandler(articleService)
+	articleHandler := article.NewHandler(articleService)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

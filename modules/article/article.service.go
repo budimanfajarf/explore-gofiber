@@ -1,19 +1,19 @@
 package article
 
-type IArticleService interface {
+type IService interface {
 	GetList() ([]ArticleListItem, error)
 }
 
-type articleService struct {
-	articleRepository IArticleRepository
+type Service struct {
+	repository IRepository
 }
 
-func NewArticleService(articleRepository IArticleRepository) *articleService {
-	return &articleService{
-		articleRepository,
+func NewService(repository IRepository) *Service {
+	return &Service{
+		repository,
 	}
 }
 
-func (s *articleService) GetList() ([]ArticleListItem, error) {
-	return s.articleRepository.GetList()
+func (s *Service) GetList() ([]ArticleListItem, error) {
+	return s.repository.GetList()
 }

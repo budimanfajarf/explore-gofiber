@@ -6,21 +6,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type IArticleRepository interface {
+type IRepository interface {
 	GetList() ([]ArticleListItem, error)
 }
 
-type articleRepository struct {
+type Repository struct {
 	db *gorm.DB
 }
 
-func NewArticleRepository(db *gorm.DB) *articleRepository {
-	return &articleRepository{
+func NewRepository(db *gorm.DB) *Repository {
+	return &Repository{
 		db,
 	}
 }
 
-func (r *articleRepository) GetList() ([]ArticleListItem, error) {
+func (r *Repository) GetList() ([]ArticleListItem, error) {
 	var data []ArticleListItem
 	err := r.db.Model(&models.Article{}).Find(&data).Error
 	if err != nil {
