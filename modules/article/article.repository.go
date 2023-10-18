@@ -1,18 +1,31 @@
 package article
 
 import (
-	"explore-gofiber/database"
 	"explore-gofiber/models"
+
+	"gorm.io/gorm"
 )
 
-func GetArticleListData() []IArticleListItem {
-	// // Method 1: get all columns
-	// articles := []models.Article{}
-	// database.MySQL.Find(&articles)
+type IArticleRepository interface {
+	GetList() ([]ArticleListItem, error)
+}
 
-	// Method 2: get specific columns
-	articles := []IArticleListItem{}
-	database.MySQL.Model(&models.Article{}).Find(&articles)
+type articleRepository struct {
+	db *gorm.DB
+}
 
-	return articles
+func NewArticleRepository(db *gorm.DB) *articleRepository {
+	return &articleRepository{
+		db,
+	}
+}
+
+func (r *articleRepository) GetList() ([]ArticleListItem, error) {
+	var data []ArticleListItem
+	err := r.db.Model(&models.Article{}).Find(&data).Error
+	if err != nil {
+		return data, err
+	}
+
+	return data, nil
 }

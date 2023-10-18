@@ -2,7 +2,7 @@ package article
 
 import "time"
 
-type IArticleListItem struct {
+type ArticleListItem struct {
 	ID        uint      `gorm:"primarykey" json:"id"`
 	Title     string    `json:"title"`
 	Image     string    `json:"image"`
