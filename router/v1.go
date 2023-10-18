@@ -1,7 +1,7 @@
 package router
 
 import (
-	"explore-gofiber/article"
+	"explore-gofiber/modules/article"
 
 	"github.com/gofiber/fiber/v2"
 )
