@@ -4,16 +4,16 @@ type IService interface {
 	GetList() ([]ArticleListItem, error)
 }
 
-type Service struct {
+type service struct {
 	repository IRepository
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{
+func NewService(repository IRepository) *service {
+	return &service{
 		repository,
 	}
 }
 
-func (s *Service) GetList() ([]ArticleListItem, error) {
+func (s *service) GetList() ([]ArticleListItem, error) {
 	return s.repository.GetList()
 }

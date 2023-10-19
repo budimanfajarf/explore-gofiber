@@ -6,17 +6,17 @@ type IHandler interface {
 	GetList(ctx *fiber.Ctx) error
 }
 
-type Handler struct {
+type handler struct {
 	service IService
 }
 
-func NewHandler(service IService) *Handler {
-	return &Handler{
+func NewHandler(service IService) *handler {
+	return &handler{
 		service,
 	}
 }
 
-func (h *Handler) GetList(ctx *fiber.Ctx) error {
+func (h *handler) GetList(ctx *fiber.Ctx) error {
 	data, _ := h.service.GetList()
 
 	return ctx.Status(200).JSON(data)

@@ -10,17 +10,17 @@ type IRepository interface {
 	GetList() ([]ArticleListItem, error)
 }
 
-type Repository struct {
+type repository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{
+func NewRepository(db *gorm.DB) *repository {
+	return &repository{
 		db,
 	}
 }
 
-func (r *Repository) GetList() ([]ArticleListItem, error) {
+func (r *repository) GetList() ([]ArticleListItem, error) {
 	var data []ArticleListItem
 	err := r.db.Model(&models.Article{}).Find(&data).Error
 	if err != nil {
