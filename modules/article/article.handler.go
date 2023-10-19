@@ -2,6 +2,10 @@ package article
 
 import "github.com/gofiber/fiber/v2"
 
+type IHandler interface {
+	GetList(ctx *fiber.Ctx) error
+}
+
 type Handler struct {
 	service IService
 }
