@@ -3,6 +3,7 @@ package main
 import (
 	"explore-gofiber/config"
 	"explore-gofiber/database"
+	"explore-gofiber/http"
 	"explore-gofiber/modules"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +24,7 @@ func main() {
 
 func setUpRoutes(app *fiber.App) {
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return http.Success(c, 200, "Hello World")
 	})
 
 	// --- api v1 ---
@@ -35,7 +36,7 @@ func setUpRoutes(app *fiber.App) {
 	// --- api v1 ---
 
 	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(404) // => 404 "Not Found"
+		return http.DefaultNotFoundException(c)
 	})
 
 }
