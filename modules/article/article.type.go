@@ -1,14 +1,16 @@
 package article
 
-import "time"
+import (
+	"explore-gofiber/models"
+)
 
 type ListItem struct {
-	ID        uint      `gorm:"primarykey" json:"id"`
-	Title     string    `json:"title"`
-	Image     string    `json:"image"`
-	ImageUrl  string    `gorm:"-" json:"imageUrl"`
-	Status    string    `json:"status" validate:"required,oneof=UNPUBLISHED PUBLISHED"`
-	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
+	models.Base
+
+	Title    string `json:"title"`
+	Image    string `json:"image"`
+	ImageUrl string `gorm:"-" json:"imageUrl"`
+	Status   string `json:"status"`
 }
 
 type CreateDto struct {
@@ -20,8 +22,10 @@ type CreateDto struct {
 }
 
 type GetListParams struct {
-	Page   int    `validate:"omitempty,min=1" json:"page"`
-	Limit  int    `validate:"omitempty,min=1" json:"limit"`
-	Search string `validate:"omitempty" json:"search"`
-	Status string `validate:"omitempty,oneof=UNPUBLISHED PUBLISHED" json:"status"`
+	Page    int    `validate:"omitempty,min=1" json:"page"`
+	Limit   int    `validate:"omitempty,min=1" json:"limit"`
+	Search  string `validate:"omitempty" json:"search"`
+	Status  string `validate:"omitempty,oneof=UNPUBLISHED PUBLISHED" json:"status"`
+	OrderBy string `validate:"omitempty,oneof=id title createdAt updatedAt image status" json:"orderBy"`
+	Order   string `validate:"omitempty,oneof=asc desc" json:"order"`
 }

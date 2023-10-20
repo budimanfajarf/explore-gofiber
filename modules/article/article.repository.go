@@ -28,6 +28,8 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 	limit := params.Limit
 	search := params.Search
 	status := params.Status
+	orderBy := params.OrderBy
+	order := params.Order
 
 	query := r.db.Model(&models.Article{})
 
@@ -38,6 +40,8 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 	if status != "" {
 		query = query.Where("status = ?", status)
 	}
+
+	query.Order(orderBy + " " + order)
 
 	query.Limit(limit).Offset(utils.CalculateOffset(page, limit))
 
