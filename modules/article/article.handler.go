@@ -21,10 +21,18 @@ func NewHandler(service IService) *handler {
 }
 
 func (h *handler) GetList(ctx *fiber.Ctx) error {
+	search := ctx.Query("search")
+	page := ctx.QueryInt("page", 1)
+
 	data, err := h.service.GetList()
 	if err != nil {
 		return err
 	}
 
-	return http.Success(ctx, 200, data)
+	meta := fiber.Map{
+		"search": search,
+		"page":   page,
+	}
+
+	return http.Success(ctx, 200, data, meta)
 }
