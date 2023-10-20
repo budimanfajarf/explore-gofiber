@@ -6,6 +6,7 @@ import (
 	"explore-gofiber/modules"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func main() {
@@ -13,7 +14,8 @@ func main() {
 	database.Connect()
 	modules.Init()
 
-	app := fiber.New()
+	app := fiber.New(config.FiberConfig())
+	app.Use(recover.New())
 	setUpRoutes(app)
 
 	app.Listen(":" + env.ProjectPort)
