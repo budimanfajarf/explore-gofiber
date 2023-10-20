@@ -33,6 +33,7 @@ func setUpRoutes(app *fiber.App) {
 	})
 
 	v1.Get("/articles", modules.ArticleHandler.GetList)
+	v1.Get("/articles/:id", modules.ArticleHandler.GetDetails)
 	// --- api v1 ---
 
 	app.Use(func(c *fiber.Ctx) error {

@@ -9,6 +9,7 @@ import (
 
 type IRepository interface {
 	GetList(page, limit int, search string) ([]ArticleListItem, error)
+	FindByID(id int) (*models.Article, error)
 }
 
 type repository struct {
@@ -38,4 +39,15 @@ func (r *repository) GetList(page, limit int, search string) ([]ArticleListItem,
 	}
 
 	return data, nil
+}
+
+func (r *repository) FindByID(id int) (*models.Article, error) {
+	var data models.Article
+
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).First(&data).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
 }

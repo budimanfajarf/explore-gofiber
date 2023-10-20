@@ -8,6 +8,7 @@ import (
 
 type IHandler interface {
 	GetList(ctx *fiber.Ctx) error
+	GetDetails(ctx *fiber.Ctx) error
 }
 
 type handler struct {
@@ -37,4 +38,22 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 	}
 
 	return http.Success(ctx, 200, data, meta)
+}
+
+func (h *handler) GetDetails(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return http.BadRequestException(ctx, "invalid article id")
+	}
+
+	article, err := h.service.GetDetails(id)
+	if err != nil {
+		if err.Error() == "record not found" {
+			return http.NotFoundException(ctx, "article not found")
+		}
+
+		return err
+	}
+
+	return http.Success(ctx, 200, article)
 }
