@@ -1,14 +1,26 @@
 package http
 
 import (
-	"explore-gofiber/utils"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+/*
+ * Copied from helper, to prevent import cycle not allowed
+ */
+func snakeCaseToWords(input string) string {
+	words := strings.Split(input, "_")
+	for i, word := range words {
+		words[i] = strings.ToLower(word)
+	}
+	return strings.Join(words, " ")
+}
+
 func HttpException(ctx *fiber.Ctx, status int, message ...string) error {
 	errorCode := HttpCode[status]
-	errorMessage := utils.SnakeCaseToWords(errorCode)
+	// errorMessage := utils.SnakeCaseToWords(errorCode)
+	errorMessage := snakeCaseToWords(errorCode)
 
 	if len(message) > 0 {
 		errorMessage = message[0]
