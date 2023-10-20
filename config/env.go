@@ -14,6 +14,7 @@ type IEnv struct {
 	MySQLUser     string
 	MySQLPassword string
 	MySQLDatabase string
+	StorageUrl    string
 }
 
 var Env *IEnv
@@ -37,6 +38,7 @@ func LoadEnv() *IEnv {
 		MySQLUser:     os.Getenv("MYSQL_USER"),
 		MySQLPassword: os.Getenv("MYSQL_PASSWORD"),
 		MySQLDatabase: os.Getenv("MYSQL_DB_NAME"),
+		StorageUrl:    os.Getenv("STORAGE_URL"),
 	}
 
 	return Env
