@@ -24,26 +24,24 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
-	page := params.Page
-	limit := params.Limit
-	search := params.Search
-	status := params.Status
-	orderBy := params.OrderBy
-	order := params.Order
-
 	query := r.db.Model(&models.Article{})
 
+	search := params.Search
 	if search != "" {
 		query = query.Where("title LIKE ?", "%"+search+"%")
 	}
 
+	status := params.Status
 	if status != "" {
 		query = query.Where("status = ?", status)
 	}
 
-	query.Order(orderBy + " " + order)
+	orderBy := params.OrderBy
+	order := params.Order
+	page := params.Page
+	limit := params.Limit
 
-	query.Limit(limit).Offset(utils.CalculateOffset(page, limit))
+	query.Order(orderBy + " " + order).Offset(utils.CalculateOffset(page, limit)).Limit(limit)
 
 	var data []ListItem
 	err := query.Find(&data).Error

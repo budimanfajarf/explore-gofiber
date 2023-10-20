@@ -36,10 +36,10 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 	params := &GetListParams{
 		Page:    ctx.QueryInt("page", 1),
 		Limit:   ctx.QueryInt("limit", 10),
-		Search:  ctx.Query("search"),
-		Status:  ctx.Query("status"),
 		OrderBy: ctx.Query("orderBy", "id"),
 		Order:   ctx.Query("order", "desc"),
+		Search:  ctx.Query("search"),
+		Status:  ctx.Query("status"),
 	}
 
 	if err := utils.Validate(params); err != nil {
