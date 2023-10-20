@@ -10,6 +10,7 @@ import (
 type IRepository interface {
 	GetList(page, limit int, search string) ([]ArticleListItem, error)
 	FindByID(id int) (*models.Article, error)
+	Create(dto StoreArticleDto) (*models.Article, error)
 }
 
 type repository struct {
@@ -50,4 +51,19 @@ func (r *repository) FindByID(id int) (*models.Article, error) {
 	}
 
 	return &data, nil
+}
+
+func (r *repository) Create(dto StoreArticleDto) (*models.Article, error) {
+	article := &models.Article{
+		Title:     dto.Title,
+		Status:    dto.Status,
+		CreatedBy: dto.CreatedBy,
+	}
+
+	err := r.db.Create(article).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return article, nil
 }

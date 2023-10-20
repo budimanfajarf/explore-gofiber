@@ -70,5 +70,13 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 201, dto)
+	// todo: change it to id current login user
+	dto.CreatedBy = 1
+
+	data, err := h.service.Create(*dto)
+	if err != nil {
+		return err
+	}
+
+	return http.Success(ctx, 201, data)
 }

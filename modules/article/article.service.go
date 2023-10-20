@@ -10,6 +10,7 @@ import (
 type IService interface {
 	GetList(page, limit int, search string) ([]ArticleListItem, error)
 	GetDetails(id int) (*models.Article, error)
+	Create(dto StoreArticleDto) (*models.Article, error)
 }
 
 type service struct {
@@ -47,6 +48,15 @@ func (s *service) GetDetails(id int) (*models.Article, error) {
 	}
 
 	data.ImageUrl = utils.GetArticleImageURL(data.Image)
+
+	return data, nil
+}
+
+func (s *service) Create(dto StoreArticleDto) (*models.Article, error) {
+	data, err := s.repository.Create(dto)
+	if err != nil {
+		return nil, err
+	}
 
 	return data, nil
 }
