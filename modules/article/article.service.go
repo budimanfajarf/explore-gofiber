@@ -1,9 +1,7 @@
 package article
 
-// import "github.com/gofiber/fiber/v2"
-
 type IService interface {
-	GetList() ([]ArticleListItem, error)
+	GetList(page, limit int, search string) ([]ArticleListItem, error)
 }
 
 type service struct {
@@ -16,10 +14,10 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList() ([]ArticleListItem, error) {
+func (s *service) GetList(page, limit int, search string) ([]ArticleListItem, error) {
 	// Test Errors
 	// panic("Something went wrong")
 	// return nil, fiber.NewError(fiber.StatusNotFound, "Not Found")
 
-	return s.repository.GetList()
+	return s.repository.GetList(page, limit, search)
 }

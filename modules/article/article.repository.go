@@ -7,7 +7,7 @@ import (
 )
 
 type IRepository interface {
-	GetList() ([]ArticleListItem, error)
+	GetList(page, limit int, search string) ([]ArticleListItem, error)
 }
 
 type repository struct {
@@ -20,9 +20,17 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) GetList() ([]ArticleListItem, error) {
+func (r *repository) GetList(page, limit int, search string) ([]ArticleListItem, error) {
 	var data []ArticleListItem
-	err := r.db.Model(&models.Article{}).Find(&data).Error
+	offset := (page - 1) * limit
+
+	query := r.db.Model(&models.Article{}).Limit(limit).Offset(offset)
+
+	if search != "" {
+		query = query.Where("title LIKE ?", "%"+search+"%")
+	}
+
+	err := query.Find(&data).Error
 	if err != nil {
 		return data, err
 	}
