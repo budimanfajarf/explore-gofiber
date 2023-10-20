@@ -1,5 +1,5 @@
 package constant
 
 const (
-	ArticleImagePath string = "article_image"
+	ImagePathArticle string = "article_image"
 )

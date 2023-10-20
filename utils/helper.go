@@ -43,5 +43,5 @@ func GetImageURL(path, imageName string) string {
 }
 
 func GetArticleImageURL(imageName string) string {
-	return GetImageURL(constant.ArticleImagePath, imageName)
+	return GetImageURL(constant.ImagePathArticle, imageName)
 }
