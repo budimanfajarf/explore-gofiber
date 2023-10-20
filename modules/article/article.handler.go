@@ -1,6 +1,10 @@
 package article
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"explore-gofiber/http"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 type IHandler interface {
 	GetList(ctx *fiber.Ctx) error
@@ -17,7 +21,11 @@ func NewHandler(service IService) *handler {
 }
 
 func (h *handler) GetList(ctx *fiber.Ctx) error {
-	data, _ := h.service.GetList()
+	data, err := h.service.GetList()
 
-	return ctx.Status(200).JSON(data)
+	if err != nil {
+		return http.InternalServerErrorException(ctx, err.Error())
+	}
+
+	return http.Success(ctx, 200, data)
 }
