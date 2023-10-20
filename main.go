@@ -36,7 +36,7 @@ func setUpRoutes(app *fiber.App) {
 	// --- api v1 ---
 
 	app.Use(func(c *fiber.Ctx) error {
-		return http.DefaultNotFoundException(c)
+		return http.NotFoundException(c)
 	})
 
 }

@@ -27,7 +27,7 @@ func FiberConfig() fiber.Config {
 			if err != nil {
 				// In case the SendFile fails
 				// return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
-				return http.DefaultInternalServerErrorException(ctx)
+				return http.InternalServerErrorException(ctx)
 			}
 
 			// Return from handler
