@@ -2,6 +2,7 @@ package article
 
 import (
 	"explore-gofiber/http"
+	"explore-gofiber/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -9,6 +10,7 @@ import (
 type IHandler interface {
 	GetList(ctx *fiber.Ctx) error
 	GetDetails(ctx *fiber.Ctx) error
+	Create(ctx *fiber.Ctx) error
 }
 
 type handler struct {
@@ -59,4 +61,14 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 	}
 
 	return http.Success(ctx, 200, article)
+}
+
+func (h *handler) Create(ctx *fiber.Ctx) error {
+	dto := new(StoreArticleDto)
+
+	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
+		return err
+	}
+
+	return http.Success(ctx, 201, dto)
 }
