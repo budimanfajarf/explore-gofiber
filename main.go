@@ -34,6 +34,7 @@ func setUpRoutes(app *fiber.App) {
 
 	v1.Get("/articles", modules.ArticleHandler.GetList)
 	v1.Get("/articles/:id", modules.ArticleHandler.GetDetails)
+	v1.Post("/articles", modules.ArticleHandler.Create)
 	// --- api v1 ---
 
 	app.Use(func(c *fiber.Ctx) error {
