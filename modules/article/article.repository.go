@@ -27,12 +27,16 @@ func (r *repository) GetList(params *GetListParams) ([]ArticleListItem, error) {
 	page := params.Page
 	limit := params.Limit
 	search := params.Search
-	// status := params.Status
+	status := params.Status
 
 	query := r.db.Model(&models.Article{})
 
 	if search != "" {
 		query = query.Where("title LIKE ?", "%"+search+"%")
+	}
+
+	if status != "" {
+		query = query.Where("status = ?", status)
 	}
 
 	query.Limit(limit).Offset(utils.CalculateOffset(page, limit))
