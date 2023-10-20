@@ -11,6 +11,6 @@ type Base struct {
 type BaseModel struct {
 	Base
 
-	CreatedBy int `gorm:"column:createdBy" json:"createdBy"`
-	UpdatedBy int `gorm:"column:updatedBy" json:"updatedBy"`
+	CreatedBy uint `gorm:"column:createdBy" json:"createdBy"`
+	UpdatedBy uint `gorm:"column:updatedBy" json:"updatedBy"`
 }

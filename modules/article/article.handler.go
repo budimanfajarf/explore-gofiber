@@ -51,7 +51,7 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 	// test := utils.GetArticleImageURL("test.png")
 	// log.Println(test)
 
-	article, err := h.service.GetDetails(id)
+	article, err := h.service.GetDetails(uint(id))
 	if err != nil {
 		if err.Error() == "record not found" {
 			return http.NotFoundException(ctx, "article not found")

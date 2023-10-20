@@ -9,7 +9,7 @@ import (
 
 type IService interface {
 	GetList(page, limit int, search string) ([]ArticleListItem, error)
-	GetDetails(id int) (*models.Article, error)
+	GetDetails(id uint) (*models.Article, error)
 	Create(dto StoreArticleDto) (*models.Article, error)
 }
 
@@ -41,7 +41,7 @@ func (s *service) GetList(page, limit int, search string) ([]ArticleListItem, er
 	return data, nil
 }
 
-func (s *service) GetDetails(id int) (*models.Article, error) {
+func (s *service) GetDetails(id uint) (*models.Article, error) {
 	data, err := s.repository.FindByID(id)
 	if err != nil {
 		return nil, err

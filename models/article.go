@@ -10,8 +10,8 @@ type Article struct {
 	ImageUrl string `gorm:"-" json:"imageUrl"`
 	Status   string `json:"status"`
 
-	CreatedBy int `gorm:"column:createdBy" json:"createdBy"`
-	UpdatedBy int `gorm:"column:updatedBy" json:"updatedBy"`
+	CreatedBy uint `gorm:"column:createdBy" json:"createdBy"`
+	UpdatedBy uint `gorm:"column:updatedBy" json:"updatedBy"`
 }
 
 type Tabler interface {
