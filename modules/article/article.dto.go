@@ -9,8 +9,8 @@ type StoreArticleDto struct {
 }
 
 type GetListParams struct {
-	Page   int    `json:"page" validate:"omitempty,min=1"`
-	Limit  int    `json:"limit" validate:"omitempty,min=1"`
-	Search string `json:"search" validate:"omitempty"`
-	Status string ` validate:"omitempty,oneof=UNPUBLISHED PUBLISHED" json:"status"`
+	Page   int    `validate:"omitempty,min=1" json:"page"`
+	Limit  int    `validate:"omitempty,min=1" json:"limit"`
+	Search string `validate:"omitempty" json:"search"`
+	Status string `validate:"omitempty,oneof=UNPUBLISHED PUBLISHED" json:"status"`
 }
