@@ -46,6 +46,9 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 		return http.BadRequestException(ctx, "invalid article id")
 	}
 
+	// test := utils.GetArticleImageURL("test.png")
+	// log.Println(test)
+
 	article, err := h.service.GetDetails(id)
 	if err != nil {
 		if err.Error() == "record not found" {

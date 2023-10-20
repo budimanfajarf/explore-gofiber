@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-var env = config.Env
-
 func CalculateOffset(page, limit int) int {
 	return (page - 1) * limit
 }
@@ -35,6 +33,9 @@ func GetImageURL(path, imageName string) string {
 	if strings.HasPrefix(imageName, "http") {
 		return imageName
 	}
+
+	env := config.Env
+	// log.Println(env.StorageUrl)
 
 	return RemoveUnnecessarySlashesFromURL(
 		strings.Join([]string{env.StorageUrl, path, imageName}, "/"),
