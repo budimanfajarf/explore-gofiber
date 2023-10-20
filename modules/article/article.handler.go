@@ -22,9 +22,8 @@ func NewHandler(service IService) *handler {
 
 func (h *handler) GetList(ctx *fiber.Ctx) error {
 	data, err := h.service.GetList()
-
 	if err != nil {
-		return http.InternalServerErrorException(ctx, err.Error())
+		return err
 	}
 
 	return http.Success(ctx, 200, data)
