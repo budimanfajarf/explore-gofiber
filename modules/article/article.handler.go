@@ -74,7 +74,7 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 }
 
 func (h *handler) Create(ctx *fiber.Ctx) error {
-	dto := new(StoreArticleDto)
+	dto := new(CreateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
 		return err

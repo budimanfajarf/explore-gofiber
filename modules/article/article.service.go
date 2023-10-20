@@ -8,9 +8,9 @@ import (
 )
 
 type IService interface {
-	GetList(params *GetListParams) ([]ArticleListItem, error)
+	GetList(params *GetListParams) ([]ListItem, error)
 	GetDetails(id uint) (*models.Article, error)
-	Create(dto StoreArticleDto) (*models.Article, error)
+	Create(dto CreateDto) (*models.Article, error)
 }
 
 type service struct {
@@ -23,7 +23,7 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList(params *GetListParams) ([]ArticleListItem, error) {
+func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
 	// Test Errors
 	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go
@@ -52,7 +52,7 @@ func (s *service) GetDetails(id uint) (*models.Article, error) {
 	return data, nil
 }
 
-func (s *service) Create(dto StoreArticleDto) (*models.Article, error) {
+func (s *service) Create(dto CreateDto) (*models.Article, error) {
 	data, err := s.repository.Create(dto)
 	if err != nil {
 		return nil, err

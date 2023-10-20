@@ -2,7 +2,7 @@ package article
 
 import "time"
 
-type ArticleListItem struct {
+type ListItem struct {
 	ID        uint      `gorm:"primarykey" json:"id"`
 	Title     string    `json:"title"`
 	Image     string    `json:"image"`
@@ -11,7 +11,7 @@ type ArticleListItem struct {
 	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
 }
 
-type StoreArticleDto struct {
+type CreateDto struct {
 	Title     string `validate:"required,min=5,max=150"`
 	Content   string `validate:"omitempty,html"`
 	Image     string `validate:"omitempty"`
