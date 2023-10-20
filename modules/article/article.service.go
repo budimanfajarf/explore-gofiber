@@ -1,8 +1,10 @@
 package article
 
 import (
+	// "errors"
 	"explore-gofiber/models"
 	"explore-gofiber/utils"
+	// "github.com/gofiber/fiber/v2"
 )
 
 type IService interface {
@@ -22,8 +24,9 @@ func NewService(repository IRepository) *service {
 
 func (s *service) GetList(page, limit int, search string) ([]ArticleListItem, error) {
 	// Test Errors
-	// panic("Something went wrong")
-	// return nil, fiber.NewError(fiber.StatusNotFound, "Not Found")
+	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
+	// return nil, errors.New("something went wrong") // caught on fiber-config.go
+	// panic("something went wrong") // caught on fiber-config.go only if enable app.Use(recover.New()) in main.go
 
 	data, err := s.repository.GetList(page, limit, search)
 	if err != nil {
