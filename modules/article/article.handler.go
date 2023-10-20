@@ -24,22 +24,32 @@ func NewHandler(service IService) *handler {
 }
 
 func (h *handler) GetList(ctx *fiber.Ctx) error {
-	page := ctx.QueryInt("page", 1)
-	limit := ctx.QueryInt("limit", 10)
-	search := ctx.Query("search")
+	// page := ctx.QueryInt("page", 1)
+	// limit := ctx.QueryInt("limit", 10)
+	// search := ctx.Query("search")
+	// status := ctx.Query("status")
 
-	data, err := h.service.GetList(page, limit, search)
+	// if status != "" && status != "UNPUBLISHED" && status != "PUBLISHED" {
+	// 	return http.BadRequestException(ctx, "invalid status, status should be UNPUBLISHED or PUBLISHED")
+	// }
+
+	params := &GetListParams{
+		Page:   ctx.QueryInt("page", 1),
+		Limit:  ctx.QueryInt("limit", 10),
+		Search: ctx.Query("search"),
+		Status: ctx.Query("status"),
+	}
+
+	if err := utils.Validate(params); err != nil {
+		return err
+	}
+
+	data, err := h.service.GetList(params)
 	if err != nil {
 		return err
 	}
 
-	meta := fiber.Map{
-		"page":   page,
-		"limit":  limit,
-		"search": search,
-	}
-
-	return http.Success(ctx, 200, data, meta)
+	return http.SuccessWithMeta(ctx, 200, data, params)
 }
 
 func (h *handler) GetDetails(ctx *fiber.Ctx) error {

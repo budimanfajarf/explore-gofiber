@@ -8,7 +8,7 @@ import (
 )
 
 type IRepository interface {
-	GetList(page, limit int, search string) ([]ArticleListItem, error)
+	GetList(params *GetListParams) ([]ArticleListItem, error)
 	FindByID(id uint) (*models.Article, error)
 	Create(dto StoreArticleDto) (*models.Article, error)
 }
@@ -23,8 +23,11 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) GetList(page, limit int, search string) ([]ArticleListItem, error) {
-	var data []ArticleListItem
+func (r *repository) GetList(params *GetListParams) ([]ArticleListItem, error) {
+	page := params.Page
+	limit := params.Limit
+	search := params.Search
+	// status := params.Status
 
 	query := r.db.Model(&models.Article{})
 
@@ -34,6 +37,7 @@ func (r *repository) GetList(page, limit int, search string) ([]ArticleListItem,
 
 	query.Limit(limit).Offset(utils.CalculateOffset(page, limit))
 
+	var data []ArticleListItem
 	err := query.Find(&data).Error
 	if err != nil {
 		return data, err

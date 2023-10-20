@@ -8,7 +8,7 @@ import (
 )
 
 type IService interface {
-	GetList(page, limit int, search string) ([]ArticleListItem, error)
+	GetList(params *GetListParams) ([]ArticleListItem, error)
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto StoreArticleDto) (*models.Article, error)
 }
@@ -23,13 +23,13 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList(page, limit int, search string) ([]ArticleListItem, error) {
+func (s *service) GetList(params *GetListParams) ([]ArticleListItem, error) {
 	// Test Errors
 	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go
 	// panic("something went wrong") // caught on fiber-config.go only if enable app.Use(recover.New()) in main.go
 
-	data, err := s.repository.GetList(page, limit, search)
+	data, err := s.repository.GetList(params)
 	if err != nil {
 		return data, err
 	}

@@ -9,9 +9,10 @@ type HttpError struct {
 
 type HttpResponse struct {
 	Data interface{} `json:"data"`
-	// Meta  map[string]interface{} `json:"meta"`
-	Meta  fiber.Map  `json:"meta"`
-	Error *HttpError `json:"error"`
+	// Meta map[string]interface{} `json:"meta"`
+	// Meta  fiber.Map  `json:"meta"`
+	Meta  interface{} `json:"meta"`
+	Error *HttpError  `json:"error"`
 }
 
 // func Success(ctx *fiber.Ctx, status int, data interface{}, meta ...map[string]interface{}) error {
@@ -25,5 +26,12 @@ func Success(ctx *fiber.Ctx, status int, data interface{}, meta ...fiber.Map) er
 	return ctx.Status(status).JSON(HttpResponse{
 		Data: data,
 		Meta: metaData,
+	})
+}
+
+func SuccessWithMeta(ctx *fiber.Ctx, status int, data interface{}, meta interface{}) error {
+	return ctx.Status(status).JSON(HttpResponse{
+		Data: data,
+		Meta: meta,
 	})
 }

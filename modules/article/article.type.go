@@ -7,5 +7,6 @@ type ArticleListItem struct {
 	Title     string    `json:"title"`
 	Image     string    `json:"image"`
 	ImageUrl  string    `gorm:"-" json:"imageUrl"`
+	Status    string    `json:"status" validate:"required,oneof=UNPUBLISHED PUBLISHED"`
 	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
 }
