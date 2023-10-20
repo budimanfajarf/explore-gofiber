@@ -4,9 +4,10 @@ package models
 type Article struct {
 	Base
 
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Image   string `json:"image"`
+	Title    string `json:"title"`
+	Content  string `json:"content"`
+	Image    string `json:"image"`
+	ImageUrl string `gorm:"-" json:"imageUrl"`
 }
 
 type Tabler interface {
