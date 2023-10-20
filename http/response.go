@@ -3,7 +3,7 @@ package http
 import "github.com/gofiber/fiber/v2"
 
 type HttpError struct {
-	Code    int    `json:"code"`
+	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
