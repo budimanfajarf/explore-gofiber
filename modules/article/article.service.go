@@ -58,5 +58,10 @@ func (s *service) Create(dto StoreArticleDto) (*models.Article, error) {
 		return nil, err
 	}
 
-	return data, nil
+	article, err := s.GetDetails(data.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return article, nil
 }
