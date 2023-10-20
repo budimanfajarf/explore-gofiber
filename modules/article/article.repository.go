@@ -55,9 +55,11 @@ func (r *repository) FindByID(id uint) (*models.Article, error) {
 
 func (r *repository) Create(dto StoreArticleDto) (*models.Article, error) {
 	article := &models.Article{
-		Title:     dto.Title,
-		Status:    dto.Status,
-		CreatedBy: dto.CreatedBy,
+		Title:  dto.Title,
+		Status: dto.Status,
+		BaseModel: models.BaseModel{
+			CreatedBy: dto.CreatedBy,
+		},
 	}
 
 	err := r.db.Create(article).Error
