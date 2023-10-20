@@ -1,12 +1,14 @@
 package http
 
 import (
+	"explore-gofiber/utils"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func HttpException(ctx *fiber.Ctx, status int, message ...string) error {
 	errorCode := HttpCode[status]
-	errorMessage := errorCode
+	errorMessage := utils.SnakeCaseToWords(errorCode)
 
 	if len(message) > 0 {
 		errorMessage = message[0]
