@@ -29,3 +29,11 @@ type GetListParams struct {
 	Search  string `validate:"omitempty" json:"search"`
 	Status  string `validate:"omitempty,oneof=UNPUBLISHED PUBLISHED" json:"status"`
 }
+
+type UpdateDto struct {
+	Title     string `validate:"required,min=5,max=150"`
+	Content   string `validate:"omitempty,html"`
+	Image     string `validate:"omitempty"`
+	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED"`
+	UpdatedBy uint
+}

@@ -11,6 +11,7 @@ type IService interface {
 	GetList(params *GetListParams) ([]ListItem, error)
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
+	Update(id uint, dto UpdateDto) (*models.Article, error)
 }
 
 type service struct {
@@ -57,6 +58,22 @@ func (s *service) Create(dto CreateDto) (*models.Article, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	article, err := s.GetDetails(data.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return article, nil
+}
+
+func (s *service) Update(id uint, dto UpdateDto) (*models.Article, error) {
+	data, err := s.repository.Update(id, dto)
+	if err != nil {
+		return nil, err
+	}
+
+	// return data, nil
 
 	article, err := s.GetDetails(data.ID)
 	if err != nil {

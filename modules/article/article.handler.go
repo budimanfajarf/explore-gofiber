@@ -95,5 +95,17 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 }
 
 func (h *handler) Update(ctx *fiber.Ctx) error {
-	return nil
+	dto := new(UpdateDto)
+
+	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
+		return err
+	}
+
+	id, _ := ctx.ParamsInt("id")
+	data, err := h.service.Update(uint(id), *dto)
+	if err != nil {
+		return err
+	}
+
+	return http.Success(ctx, 200, data)
 }

@@ -12,6 +12,7 @@ type IRepository interface {
 	FindByID(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
 	CheckIsExist(id uint) (bool, error)
+	Update(id uint, dto UpdateDto) (*models.Article, error)
 }
 
 type repository struct {
@@ -91,4 +92,26 @@ func (r *repository) CheckIsExist(id uint) (bool, error) {
 		return false, err
 	}
 	return count > 0, nil
+}
+
+func (r *repository) Update(id uint, dto UpdateDto) (*models.Article, error) {
+	article := &models.Article{
+		Title:   dto.Title,
+		Content: dto.Content,
+		Image:   dto.Image,
+		Status:  dto.Status,
+		BaseModel: models.BaseModel{
+			UpdatedBy: dto.UpdatedBy,
+		},
+	}
+
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(article).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// to make sure the id returned
+	article.ID = id
+
+	return article, nil
 }
