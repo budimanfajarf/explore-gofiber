@@ -13,6 +13,7 @@ type IRepository interface {
 	Create(dto CreateDto) (*models.Article, error)
 	CheckIsExist(id uint) (bool, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
+	Delete(id uint) error
 }
 
 type repository struct {
@@ -114,4 +115,8 @@ func (r *repository) Update(id uint, dto UpdateDto) (*models.Article, error) {
 	article.ID = id
 
 	return article, nil
+}
+
+func (r *repository) Delete(id uint) error {
+	return r.db.Delete(&models.Article{}, id).Error
 }

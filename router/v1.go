@@ -18,4 +18,5 @@ func setUpRoutesV1(app *fiber.App) {
 	v1Article.Get("/:id", modules.ArticleHandler.GetDetails)
 	v1Article.Post("/", modules.ArticleHandler.Create)
 	v1Article.Put("/:id", middleware.IsArticleExistMiddleware, modules.ArticleHandler.Update)
+	v1Article.Delete("/:id", middleware.IsArticleExistMiddleware, modules.ArticleHandler.Delete)
 }

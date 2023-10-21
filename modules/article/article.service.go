@@ -12,6 +12,7 @@ type IService interface {
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
+	Delete(id uint) error
 }
 
 type service struct {
@@ -81,4 +82,8 @@ func (s *service) Update(id uint, dto UpdateDto) (*models.Article, error) {
 	}
 
 	return article, nil
+}
+
+func (s *service) Delete(id uint) error {
+	return s.repository.Delete(id)
 }

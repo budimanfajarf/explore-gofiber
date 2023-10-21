@@ -3,6 +3,7 @@ package article
 import (
 	"explore-gofiber/http"
 	"explore-gofiber/utils"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,6 +13,7 @@ type IHandler interface {
 	GetDetails(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type handler struct {
@@ -108,4 +110,14 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 	}
 
 	return http.Success(ctx, 200, data)
+}
+
+func (h *handler) Delete(ctx *fiber.Ctx) error {
+	id, _ := ctx.ParamsInt("id")
+	err := h.service.Delete(uint(id))
+	if err != nil {
+		return err
+	}
+
+	return http.Success(ctx, 200, fmt.Sprintf("article with id %d deleted", id))
 }
