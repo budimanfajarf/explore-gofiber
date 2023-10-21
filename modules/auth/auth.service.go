@@ -1,11 +1,11 @@
 package auth
 
 import (
+	"errors"
+	"explore-gofiber/constant"
 	"explore-gofiber/modules/admin"
 	"explore-gofiber/utils/jwt"
 	"explore-gofiber/utils/password"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type IService interface {
@@ -27,12 +27,10 @@ func (s *service) Login(dto LoginDto) (AuthData, error) {
 
 	admin := &AdminData{}
 
-	invalidErrMsg := "invalid email or password"
-
 	err := s.adminRepository.FindOneByEmail(admin, dto.Email).Error
 	if err != nil {
 		if err.Error() == "record not found" {
-			return data, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+			return data, errors.New(constant.ErrInvalidCredentials)
 		}
 
 		return data, err
@@ -40,7 +38,7 @@ func (s *service) Login(dto LoginDto) (AuthData, error) {
 
 	err = password.Verify(admin.Password, dto.Password)
 	if err != nil {
-		return data, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+		return data, errors.New(constant.ErrInvalidCredentials)
 	}
 
 	token := jwt.Generate(&jwt.TokenPayload{

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"explore-gofiber/constant"
 	"explore-gofiber/http"
 	"explore-gofiber/utils"
 
@@ -30,6 +31,10 @@ func (h *handler) Login(ctx *fiber.Ctx) error {
 
 	data, err := h.service.Login(*dto)
 	if err != nil {
+		if err.Error() == constant.ErrInvalidCredentials {
+			return http.InvalidCredentialsException(ctx)
+		}
+
 		return err
 	}
 
