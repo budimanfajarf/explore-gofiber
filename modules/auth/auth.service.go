@@ -1,6 +1,11 @@
 package auth
 
-import "explore-gofiber/modules/admin"
+import (
+	"explore-gofiber/modules/admin"
+
+	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type IService interface {
 	Login(dto LoginDto) (LoginResult, error)
@@ -21,10 +26,21 @@ func (s *service) Login(dto LoginDto) (LoginResult, error) {
 
 	admin, err := s.adminService.FindByEmail(dto.Email)
 
-	println("admin", admin)
+	invalidErrMsg := "invalid email or password"
 
 	if err != nil {
+		if err.Error() == "record not found" {
+			return result, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+		}
+
 		return result, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(dto.Password))
+
+	if err != nil {
+		println(err.Error())
+		return result, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
 	}
 
 	return result, nil
