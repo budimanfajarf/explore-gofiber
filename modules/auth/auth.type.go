@@ -5,6 +5,22 @@ type LoginDto struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type LoginResult struct {
+// UserResponse todo
+type UserResponse struct {
+	ID       uint   `json:"id"`
+	Role     string `json:"role"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"-"`
+}
+
+// AccessResponse todo
+type AccessResponse struct {
 	Token string `json:"token"`
+}
+
+// AuthResponse todo
+type AuthResponse struct {
+	User *UserResponse   `json:"user"`
+	Auth *AccessResponse `json:"auth"`
 }

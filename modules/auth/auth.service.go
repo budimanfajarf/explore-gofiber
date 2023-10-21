@@ -2,29 +2,32 @@ package auth
 
 import (
 	"explore-gofiber/modules/admin"
+	"explore-gofiber/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type IService interface {
-	Login(dto LoginDto) (LoginResult, error)
+	Login(dto LoginDto) (AuthResponse, error)
 }
 
 type service struct {
-	adminService admin.IService
+	adminRepository admin.IRepository
 }
 
-func NewService(adminService admin.IService) *service {
+func NewService(adminRepository admin.IRepository) *service {
 	return &service{
-		adminService,
+		adminRepository,
 	}
 }
 
-func (s *service) Login(dto LoginDto) (LoginResult, error) {
-	var result LoginResult
+func (s *service) Login(dto LoginDto) (AuthResponse, error) {
+	var result AuthResponse
 
-	admin, err := s.adminService.FindByEmail(dto.Email)
+	admin := &UserResponse{}
+
+	err := s.adminRepository.FindOneByEmail(admin, dto.Email).Error
 
 	invalidErrMsg := "invalid email or password"
 
@@ -41,6 +44,17 @@ func (s *service) Login(dto LoginDto) (LoginResult, error) {
 	if err != nil {
 		println(err.Error())
 		return result, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+	}
+
+	token := jwt.Generate(&jwt.TokenPayload{
+		ID: admin.ID,
+	})
+
+	result = AuthResponse{
+		User: admin,
+		Auth: &AccessResponse{
+			Token: token,
+		},
 	}
 
 	return result, nil

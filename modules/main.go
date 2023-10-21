@@ -32,7 +32,7 @@ func Init() {
 	// Services
 	ArticleService = article.NewService(ArticleRepository)
 	AdminService = admin.NewService(AdminRepository)
-	AuthService = auth.NewService(AdminService)
+	AuthService = auth.NewService(AdminRepository)
 
 	// Handlers
 	ArticleHandler = article.NewHandler(ArticleService)
