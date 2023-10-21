@@ -5,7 +5,7 @@ type LoginDto struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type Admin struct {
+type AdminData struct {
 	ID       uint   `json:"id"`
 	Role     string `json:"role"`
 	Name     string `json:"name"`
