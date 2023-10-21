@@ -48,22 +48,16 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 
 	var data []ListItem
 	err := query.Find(&data).Error
-	if err != nil {
-		return data, err
-	}
 
-	return data, nil
+	return data, err
 }
 
 func (r *repository) FindByID(id uint) (*models.Article, error) {
 	var data models.Article
 
 	err := r.db.Model(&models.Article{}).Where("id = ?", id).First(&data).Error
-	if err != nil {
-		return nil, err
-	}
 
-	return &data, nil
+	return &data, err
 }
 
 func (r *repository) Create(dto CreateDto) (*models.Article, error) {
@@ -79,11 +73,8 @@ func (r *repository) Create(dto CreateDto) (*models.Article, error) {
 	}
 
 	err := r.db.Create(article).Error
-	if err != nil {
-		return nil, err
-	}
 
-	return article, nil
+	return article, err
 }
 
 func (r *repository) CheckIsExist(id uint) (bool, error) {
