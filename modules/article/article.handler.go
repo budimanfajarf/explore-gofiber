@@ -11,6 +11,7 @@ type IHandler interface {
 	GetList(ctx *fiber.Ctx) error
 	GetDetails(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
 }
 
 type handler struct {
@@ -91,4 +92,8 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 	}
 
 	return http.Success(ctx, 201, data)
+}
+
+func (h *handler) Update(ctx *fiber.Ctx) error {
+	return nil
 }

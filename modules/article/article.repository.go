@@ -11,6 +11,7 @@ type IRepository interface {
 	GetList(params *GetListParams) ([]ListItem, error)
 	FindByID(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
+	CheckIsExist(id uint) (bool, error)
 }
 
 type repository struct {
@@ -81,4 +82,13 @@ func (r *repository) Create(dto CreateDto) (*models.Article, error) {
 	}
 
 	return article, nil
+}
+
+func (r *repository) CheckIsExist(id uint) (bool, error) {
+	var count int64
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }

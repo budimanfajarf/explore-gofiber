@@ -7,10 +7,10 @@ import (
 
 var (
 	// Repositories
-	articleRepository article.IRepository
+	ArticleRepository article.IRepository
 
 	// Services
-	articleService article.IService
+	ArticleService article.IService
 
 	// Handlers
 	ArticleHandler article.IHandler
@@ -20,11 +20,11 @@ func Init() {
 	mySqlDB := database.MySQL
 
 	// Repositories
-	articleRepository = article.NewRepository(mySqlDB)
+	ArticleRepository = article.NewRepository(mySqlDB)
 
 	// Services
-	articleService = article.NewService(articleRepository)
+	ArticleService = article.NewService(ArticleRepository)
 
 	// Handlers
-	ArticleHandler = article.NewHandler(articleService)
+	ArticleHandler = article.NewHandler(ArticleService)
 }
