@@ -19,4 +19,8 @@ func setUpRoutesV1(app *fiber.App) {
 	v1Article.Post("/", modules.ArticleHandler.Create)
 	v1Article.Put("/:id", middleware.IsArticleExistMiddleware, modules.ArticleHandler.Update)
 	v1Article.Delete("/:id", middleware.IsArticleExistMiddleware, modules.ArticleHandler.Delete)
+
+	// auth
+	v1Auth := v1.Group("/auth")
+	v1Auth.Post("/login", modules.AuthHandler.Login)
 }
