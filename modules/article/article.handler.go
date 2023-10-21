@@ -81,7 +81,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 	dto := new(CreateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
-		return err
+		return http.InvalidPayloadException(ctx, err.Error())
 	}
 
 	authenticatedUserId := *utils.GetUser(ctx)
@@ -99,7 +99,7 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 	dto := new(UpdateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
-		return err
+		return http.InvalidPayloadException(ctx, err.Error())
 	}
 
 	id, _ := ctx.ParamsInt("id") // no need to check error, already checked on CheckIfArticleExist middleware

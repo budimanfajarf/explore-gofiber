@@ -24,3 +24,7 @@ func CustomHttpException(ctx *fiber.Ctx, status int, code string, message ...str
 func InvalidCredentialsException(ctx *fiber.Ctx, message ...string) error {
 	return CustomHttpException(ctx, fiber.StatusBadRequest, constant.ErrInvalidCredentials, message...)
 }
+
+func InvalidPayloadException(ctx *fiber.Ctx, message ...string) error {
+	return CustomHttpException(ctx, fiber.StatusBadRequest, constant.ErrInvalidPayload, message...)
+}
