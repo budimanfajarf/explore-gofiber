@@ -9,7 +9,7 @@ import (
 )
 
 type IService interface {
-	Login(dto LoginDto) (AuthResponse, error)
+	Login(dto LoginDto) (AuthData, error)
 }
 
 type service struct {
@@ -22,10 +22,10 @@ func NewService(adminRepository admin.IRepository) *service {
 	}
 }
 
-func (s *service) Login(dto LoginDto) (AuthResponse, error) {
-	var result AuthResponse
+func (s *service) Login(dto LoginDto) (AuthData, error) {
+	var data AuthData
 
-	admin := &UserResponse{}
+	admin := &Admin{}
 
 	err := s.adminRepository.FindOneByEmail(admin, dto.Email).Error
 
@@ -33,29 +33,29 @@ func (s *service) Login(dto LoginDto) (AuthResponse, error) {
 
 	if err != nil {
 		if err.Error() == "record not found" {
-			return result, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+			return data, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
 		}
 
-		return result, err
+		return data, err
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(dto.Password))
 
 	if err != nil {
-		println(err.Error())
-		return result, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
+		return data, fiber.NewError(fiber.StatusBadRequest, invalidErrMsg)
 	}
 
 	token := jwt.Generate(&jwt.TokenPayload{
 		ID: admin.ID,
 	})
 
-	result = AuthResponse{
-		User: admin,
-		Auth: &AccessResponse{
-			Token: token,
-		},
+	data = AuthData{
+		ID:    admin.ID,
+		Role:  admin.Role,
+		Name:  admin.Name,
+		Email: admin.Email,
+		Token: token,
 	}
 
-	return result, nil
+	return data, nil
 }

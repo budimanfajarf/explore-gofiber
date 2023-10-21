@@ -9,8 +9,7 @@ type Admin struct {
 	Role     string `json:"role"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
-	Password string `json:"password"`
-	Status   string `json:"status"`
+	Password string `json:"-"`
 }
 
 type Tabler interface {

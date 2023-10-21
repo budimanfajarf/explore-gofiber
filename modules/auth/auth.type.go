@@ -5,8 +5,7 @@ type LoginDto struct {
 	Password string `json:"password" validate:"required"`
 }
 
-// UserResponse todo
-type UserResponse struct {
+type Admin struct {
 	ID       uint   `json:"id"`
 	Role     string `json:"role"`
 	Name     string `json:"name"`
@@ -14,13 +13,10 @@ type UserResponse struct {
 	Password string `json:"-"`
 }
 
-// AccessResponse todo
-type AccessResponse struct {
+type AuthData struct {
+	ID    uint   `json:"id"`
+	Role  string `json:"role"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 	Token string `json:"token"`
-}
-
-// AuthResponse todo
-type AuthResponse struct {
-	User *UserResponse   `json:"user"`
-	Auth *AccessResponse `json:"auth"`
 }
