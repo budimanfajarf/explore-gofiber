@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func IsArticleExistMiddleware(ctx *fiber.Ctx) error {
+func CheckIfArticleExist(ctx *fiber.Ctx) error {
 	articleRepository := modules.ArticleRepository
 
 	id, err := ctx.ParamsInt("id")
