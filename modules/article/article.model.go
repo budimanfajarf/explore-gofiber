@@ -1,8 +1,10 @@
-package models
+package article
+
+import "explore-gofiber/types"
 
 // Article model
 type Article struct {
-	BaseModel
+	types.BaseModel
 
 	Title    string `json:"title"`
 	Content  string `json:"content"`

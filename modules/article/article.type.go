@@ -1,11 +1,9 @@
 package article
 
-import (
-	"explore-gofiber/models"
-)
+import "explore-gofiber/types"
 
 type ListItem struct {
-	models.Base
+	types.Base
 
 	Title    string `json:"title"`
 	Image    string `json:"image"`

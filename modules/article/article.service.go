@@ -1,17 +1,15 @@
 package article
 
 import (
-	// "errors"
-	"explore-gofiber/models"
 	"explore-gofiber/utils"
 	// "github.com/gofiber/fiber/v2"
 )
 
 type IService interface {
 	GetList(params *GetListParams) ([]ListItem, error)
-	GetDetails(id uint) (*models.Article, error)
-	Create(dto CreateDto) (*models.Article, error)
-	Update(id uint, dto UpdateDto) (*models.Article, error)
+	GetDetails(id uint) (*Article, error)
+	Create(dto CreateDto) (*Article, error)
+	Update(id uint, dto UpdateDto) (*Article, error)
 	Delete(id uint) error
 }
 
@@ -43,7 +41,7 @@ func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
 	return data, nil
 }
 
-func (s *service) GetDetails(id uint) (*models.Article, error) {
+func (s *service) GetDetails(id uint) (*Article, error) {
 	data, err := s.repository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -54,7 +52,7 @@ func (s *service) GetDetails(id uint) (*models.Article, error) {
 	return data, nil
 }
 
-func (s *service) Create(dto CreateDto) (*models.Article, error) {
+func (s *service) Create(dto CreateDto) (*Article, error) {
 	data, err := s.repository.Create(dto)
 	if err != nil {
 		return nil, err
@@ -65,7 +63,7 @@ func (s *service) Create(dto CreateDto) (*models.Article, error) {
 	return article, err
 }
 
-func (s *service) Update(id uint, dto UpdateDto) (*models.Article, error) {
+func (s *service) Update(id uint, dto UpdateDto) (*Article, error) {
 	data, err := s.repository.Update(id, dto)
 	if err != nil {
 		return nil, err
