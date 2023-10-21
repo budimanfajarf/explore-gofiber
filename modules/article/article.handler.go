@@ -3,7 +3,6 @@ package article
 import (
 	"explore-gofiber/http"
 	"explore-gofiber/utils"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -121,5 +120,5 @@ func (h *handler) Delete(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 200, fmt.Sprintf("article with id %d deleted", id))
+	return http.Success(ctx, 200, "article deleted successfully")
 }

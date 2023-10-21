@@ -58,9 +58,7 @@ func (s *service) Create(dto CreateDto) (*Article, error) {
 		return nil, err
 	}
 
-	article, err := s.GetDetails(data.ID)
-
-	return article, err
+	return s.GetDetails(data.ID)
 }
 
 func (s *service) Update(id uint, dto UpdateDto) (*Article, error) {
@@ -69,11 +67,7 @@ func (s *service) Update(id uint, dto UpdateDto) (*Article, error) {
 		return nil, err
 	}
 
-	// return data, nil
-
-	article, err := s.GetDetails(data.ID)
-
-	return article, err
+	return s.GetDetails(data.ID)
 }
 
 func (s *service) Delete(id uint) error {
