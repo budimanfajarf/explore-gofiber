@@ -14,7 +14,6 @@ var (
 
 	// Services
 	ArticleService article.IService
-	AdminService   admin.IService
 	AuthService    auth.IService
 
 	// Handlers
@@ -31,7 +30,6 @@ func Init() {
 
 	// Services
 	ArticleService = article.NewService(ArticleRepository)
-	AdminService = admin.NewService(AdminRepository)
 	AuthService = auth.NewService(AdminRepository)
 
 	// Handlers
