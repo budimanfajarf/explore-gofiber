@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"explore-gofiber/models"
+
 	"gorm.io/gorm"
 )
 
@@ -20,7 +22,7 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) FindOne(dest interface{}, conds ...interface{}) *gorm.DB {
-	return r.db.Model(&Admin{}).Take(dest, conds...)
+	return r.db.Model(&models.Admin{}).Take(dest, conds...)
 }
 
 func (r *repository) FindOneByEmail(dest interface{}, email string) *gorm.DB {

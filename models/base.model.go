@@ -1,4 +1,4 @@
-package types
+package models
 
 import "time"
 
@@ -13,4 +13,8 @@ type BaseModel struct {
 
 	CreatedBy uint `gorm:"column:createdBy" json:"createdBy"`
 	UpdatedBy uint `gorm:"column:updatedBy" json:"updatedBy"`
+}
+
+type Tabler interface {
+	TableName() string
 }

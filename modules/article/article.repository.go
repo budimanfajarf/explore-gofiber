@@ -1,7 +1,7 @@
 package article
 
 import (
-	"explore-gofiber/types"
+	"explore-gofiber/models"
 	"explore-gofiber/utils"
 
 	"gorm.io/gorm"
@@ -9,10 +9,10 @@ import (
 
 type IRepository interface {
 	GetList(params *GetListParams) ([]ListItem, error)
-	FindByID(id uint) (*Article, error)
-	Create(dto CreateDto) (*Article, error)
+	FindByID(id uint) (*models.Article, error)
+	Create(dto CreateDto) (*models.Article, error)
 	CheckIsExist(id uint) (bool, error)
-	Update(id uint, dto UpdateDto) (*Article, error)
+	Update(id uint, dto UpdateDto) (*models.Article, error)
 	Delete(id uint) error
 }
 
@@ -27,7 +27,7 @@ func NewRepository(db *gorm.DB) *repository {
 }
 
 func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
-	query := r.db.Model(&Article{})
+	query := r.db.Model(&models.Article{})
 
 	search := params.Search
 	if search != "" {
@@ -52,21 +52,21 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 	return data, err
 }
 
-func (r *repository) FindByID(id uint) (*Article, error) {
-	var data Article
+func (r *repository) FindByID(id uint) (*models.Article, error) {
+	var data models.Article
 
-	err := r.db.Model(&Article{}).Where("id = ?", id).First(&data).Error
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).First(&data).Error
 
 	return &data, err
 }
 
-func (r *repository) Create(dto CreateDto) (*Article, error) {
-	article := &Article{
+func (r *repository) Create(dto CreateDto) (*models.Article, error) {
+	article := &models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
 		Image:   dto.Image,
 		Status:  dto.Status,
-		BaseModel: types.BaseModel{
+		BaseModel: models.BaseModel{
 			CreatedBy: dto.CreatedBy,
 			UpdatedBy: dto.CreatedBy,
 		},
@@ -79,25 +79,25 @@ func (r *repository) Create(dto CreateDto) (*Article, error) {
 
 func (r *repository) CheckIsExist(id uint) (bool, error) {
 	var count int64
-	err := r.db.Model(&Article{}).Where("id = ?", id).Count(&count).Error
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).Count(&count).Error
 	if err != nil {
 		return false, err
 	}
 	return count > 0, nil
 }
 
-func (r *repository) Update(id uint, dto UpdateDto) (*Article, error) {
-	article := &Article{
+func (r *repository) Update(id uint, dto UpdateDto) (*models.Article, error) {
+	article := &models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
 		Image:   dto.Image,
 		Status:  dto.Status,
-		BaseModel: types.BaseModel{
+		BaseModel: models.BaseModel{
 			UpdatedBy: dto.UpdatedBy,
 		},
 	}
 
-	err := r.db.Model(&Article{}).Where("id = ?", id).Updates(article).Error
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(article).Error
 	if err != nil {
 		return nil, err
 	}
@@ -109,5 +109,5 @@ func (r *repository) Update(id uint, dto UpdateDto) (*Article, error) {
 }
 
 func (r *repository) Delete(id uint) error {
-	return r.db.Delete(&Article{}, id).Error
+	return r.db.Delete(&models.Article{}, id).Error
 }

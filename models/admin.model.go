@@ -1,19 +1,13 @@
-package admin
-
-import "explore-gofiber/types"
+package models
 
 // Admin model
 type Admin struct {
-	types.BaseModel
+	BaseModel
 
 	Role     string `json:"role"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Password string `json:"-"`
-}
-
-type Tabler interface {
-	TableName() string
 }
 
 func (Admin) TableName() string {
