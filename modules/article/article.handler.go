@@ -85,8 +85,8 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	// todo: change it to id current login user
-	dto.CreatedBy = 1
+	authenticatedUserId := *utils.GetUser(ctx)
+	dto.CreatedBy = authenticatedUserId
 
 	data, err := h.service.Create(*dto)
 	if err != nil {
@@ -103,7 +103,9 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	id, _ := ctx.ParamsInt("id")
+	id, _ := ctx.ParamsInt("id") // no need to check error, already checked on CheckIfArticleExist middleware
+	dto.UpdatedBy = *utils.GetUser(ctx)
+
 	data, err := h.service.Update(uint(id), *dto)
 	if err != nil {
 		return err
