@@ -44,12 +44,19 @@ func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
 
 func (s *service) GetDetails(id uint) (*models.Article, error) {
 	data := &models.Article{}
-	err := s.repository.FindOneByIDWithTags(data, id).Error
+	// err := s.repository.FindOne(data, nil, "id = ?", id).Error
+	// err := s.repository.FindOne(data, []string{"Tags"}, "id = ?", id).Error
+	// err := s.repository.FindOneByID(data, id, nil).Error
+	err := s.repository.FindOneByID(data, id, []string{"Tags"}).Error
 	if err != nil {
 		return data, err
 	}
 
 	data.ImageUrl = utils.GetArticleImageURL(data.Image)
+
+	if data.Tags == nil {
+		data.Tags = []models.Tag{}
+	}
 
 	return data, nil
 }

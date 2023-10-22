@@ -9,9 +9,8 @@ import (
 
 type IRepository interface {
 	GetList(params *GetListParams) ([]ListItem, error)
-	FindOne(dest interface{}, conds ...interface{}) *gorm.DB
-	FindOneByID(dest interface{}, id uint) *gorm.DB
-	FindOneByIDWithTags(dest interface{}, id uint) *gorm.DB
+	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
+	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto) (*models.Article, error)
 	CheckIsExist(id uint) (bool, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
@@ -54,16 +53,20 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 	return data, err
 }
 
-func (r *repository) FindOne(dest interface{}, conds ...interface{}) *gorm.DB {
-	return r.db.Model(&models.Article{}).Take(dest, conds...)
+func (r *repository) FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB {
+	query := r.db.Model(&models.Article{})
+
+	if len(relations) > 0 {
+		for _, relation := range relations {
+			query = query.Preload(relation)
+		}
+	}
+
+	return query.Take(dest, conds...)
 }
 
-func (r *repository) FindOneByID(dest interface{}, id uint) *gorm.DB {
-	return r.FindOne(dest, "id = ?", id)
-}
-
-func (r *repository) FindOneByIDWithTags(dest interface{}, id uint) *gorm.DB {
-	return r.FindOneByID(dest, id).Preload("Tags")
+func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB {
+	return r.FindOne(dest, relations, "id = ?", id)
 }
 
 func (r *repository) Create(dto CreateDto) (*models.Article, error) {
