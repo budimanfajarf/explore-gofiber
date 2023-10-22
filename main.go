@@ -16,8 +16,8 @@ func main() {
 	database.Connect()
 	modules.Init()
 
-	app := fiber.New(config.FiberConfig())
-	app.Use(logger.New(config.LoggerConfig()))
+	app := fiber.New(config.FiberConfig)
+	app.Use(logger.New(config.LoggerConfig))
 	// app.Use(recover.New()) // disable it to avoid confusion when getting runtime errors
 
 	router.SetUpRoutes(app)
