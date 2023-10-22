@@ -9,7 +9,9 @@ import (
 
 type IRepository interface {
 	GetList(params *GetListParams) ([]ListItem, error)
-	FindByID(id uint) (*models.Article, error)
+	FindOne(dest interface{}, conds ...interface{}) *gorm.DB
+	FindOneByID(dest interface{}, id uint) *gorm.DB
+	FindOneByIDWithTags(dest interface{}, id uint) *gorm.DB
 	Create(dto CreateDto) (*models.Article, error)
 	CheckIsExist(id uint) (bool, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
@@ -52,12 +54,16 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 	return data, err
 }
 
-func (r *repository) FindByID(id uint) (*models.Article, error) {
-	var data models.Article
+func (r *repository) FindOne(dest interface{}, conds ...interface{}) *gorm.DB {
+	return r.db.Model(&models.Article{}).Take(dest, conds...)
+}
 
-	err := r.db.Model(&models.Article{}).Preload("Tags").Where("id = ?", id).First(&data).Error
+func (r *repository) FindOneByID(dest interface{}, id uint) *gorm.DB {
+	return r.FindOne(dest, "id = ?", id)
+}
 
-	return &data, err
+func (r *repository) FindOneByIDWithTags(dest interface{}, id uint) *gorm.DB {
+	return r.FindOneByID(dest, id).Preload("Tags")
 }
 
 func (r *repository) Create(dto CreateDto) (*models.Article, error) {
