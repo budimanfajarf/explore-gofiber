@@ -7,7 +7,7 @@ import (
 )
 
 type IService interface {
-	GetList(params *GetListParams) ([]ListItem, error)
+	GetList(params *GetListParams) ([]models.Article, error)
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
@@ -24,7 +24,7 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
+func (s *service) GetList(params *GetListParams) ([]models.Article, error) {
 	// Test Errors
 	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go

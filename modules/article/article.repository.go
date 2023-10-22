@@ -8,7 +8,7 @@ import (
 )
 
 type IRepository interface {
-	GetList(params *GetListParams) ([]ListItem, error)
+	GetList(params *GetListParams) ([]models.Article, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto) (*models.Article, error)
@@ -27,27 +27,29 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
+func (r *repository) GetList(params *GetListParams) ([]models.Article, error) {
 	query := r.db.Model(&models.Article{})
 
 	search := params.Search
-	if search != "" {
-		query = query.Where("title LIKE ?", "%"+search+"%")
-	}
-
 	status := params.Status
-	if status != "" {
-		query = query.Where("status = ?", status)
-	}
-
-	orderBy := params.OrderBy
-	order := params.Order
-	page := params.Page
 	limit := params.Limit
 
-	query.Order(orderBy + " " + order).Offset(utils.CalculateOffset(page, limit)).Limit(limit)
+	if search != "" {
+		query.Where("title LIKE ?", "%"+search+"%")
+	}
 
-	var data []ListItem
+	if status != "" {
+		query.Where("status = ?", status)
+	}
+
+	query.Order(params.OrderBy + " " + params.Order)
+	query.Offset(utils.CalculateOffset(params.Page, limit))
+	query.Limit(limit)
+	// query.Select("id, title, image, status, createdAt, updatedAt")
+	query.Select([]string{"id", "title", "image", "status", "createdAt", "updatedAt"})
+	query.Preload("Tags")
+
+	var data []models.Article
 	err := query.Find(&data).Error
 
 	return data, err

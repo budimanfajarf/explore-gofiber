@@ -1,16 +1,5 @@
 package article
 
-import "explore-gofiber/models"
-
-type ListItem struct {
-	models.Base
-
-	Title    string `json:"title"`
-	Image    string `json:"image"`
-	ImageUrl string `gorm:"-" json:"imageUrl"`
-	Status   string `json:"status"`
-}
-
 type CreateDto struct {
 	Title     string `validate:"required,min=5,max=150"`
 	Content   string `validate:"omitempty,html"`
