@@ -22,7 +22,7 @@ var (
 )
 
 func Init() {
-	mySqlDB := database.MySQL
+	mySqlDB := database.GormMySqlDBConn
 
 	// Repositories
 	ArticleRepository = article.NewRepository(mySqlDB)
