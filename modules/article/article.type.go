@@ -24,7 +24,7 @@ type CreateDto struct {
 	CreatedBy uint
 }
 
-type GetListParams struct {
+type FindAllArgs struct {
 	Page    int    `validate:"omitempty,min=1" default:"1" json:"page"`
 	Limit   int    `validate:"omitempty,min=1" json:"limit"`
 	OrderBy string `validate:"omitempty,oneof=id title createdAt updatedAt image status" json:"orderBy"`

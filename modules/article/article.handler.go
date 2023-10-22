@@ -35,7 +35,7 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 	// 	return http.BadRequestException(ctx, "invalid status, status should be UNPUBLISHED or PUBLISHED")
 	// }
 
-	params := &GetListParams{
+	params := &FindAllArgs{
 		Page:    ctx.QueryInt("page", 1),
 		Limit:   ctx.QueryInt("limit", 10),
 		OrderBy: ctx.Query("orderBy", "id"),

@@ -7,7 +7,7 @@ import (
 )
 
 type IService interface {
-	GetList(params *GetListParams) ([]ListItem, error)
+	GetList(args *FindAllArgs) ([]ListItem, error)
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
@@ -24,7 +24,7 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
+func (s *service) GetList(args *FindAllArgs) ([]ListItem, error) {
 	// Test Errors
 	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go
@@ -32,7 +32,12 @@ func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
 
 	var result []ListItem
 
-	data, err := s.repository.GetList(params)
+	data, err := s.repository.FindAll(
+		args,
+		[]string{"id", "title", "image", "status", "createdAt", "updatedAt"},
+		[]string{"Tags"},
+	)
+
 	if err != nil {
 		return result, err
 	}
