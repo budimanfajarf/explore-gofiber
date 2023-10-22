@@ -55,7 +55,9 @@ func (r *repository) GetList(params *GetListParams) ([]ListItem, error) {
 func (r *repository) FindByID(id uint) (*models.Article, error) {
 	var data models.Article
 
-	err := r.db.Model(&models.Article{}).Where("id = ?", id).First(&data).Error
+	// err := r.db.Model(&models.Article{}).Where("id = ?", id).First(&data).Error
+
+	err := r.db.Model(&models.Article{}).Preload("Tags").Where("id = ?", id).First(&data).Error
 
 	return &data, err
 }

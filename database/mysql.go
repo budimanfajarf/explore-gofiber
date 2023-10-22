@@ -2,11 +2,13 @@ package database
 
 import (
 	"explore-gofiber/config"
+	"explore-gofiber/models"
 	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 var (
@@ -25,10 +27,20 @@ func ConnectMySQL() {
 	*/
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+			NoLowerCase:   true,
+		},
 	})
 
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
+	}
+
+	err = db.SetupJoinTable(&models.Article{}, "Tags", &models.ArticleTag{})
+
+	if err != nil {
+		log.Fatal("Failed to setup join table. \n", err)
 	}
 
 	log.Println("Connected to database")
