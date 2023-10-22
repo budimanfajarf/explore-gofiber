@@ -1,5 +1,21 @@
 package article
 
+import (
+	"explore-gofiber/models"
+	"time"
+)
+
+type ListItem struct {
+	ID        uint         `json:"id"`
+	Title     string       `json:"title"`
+	Image     string       `json:"image"`
+	ImageURL  string       `json:"imageUrl"`
+	Status    string       `json:"status"`
+	CreatedAt time.Time    `json:"createdAt"`
+	UpdatedAt time.Time    `json:"updatedAt"`
+	Tags      []models.Tag `json:"tags"`
+}
+
 type CreateDto struct {
 	Title     string `validate:"required,min=5,max=150"`
 	Content   string `validate:"omitempty,html"`

@@ -53,7 +53,23 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.SuccessWithMeta(ctx, 200, data, params)
+	// Create a custom response slice with the desired fields
+	var response []ListItem
+	for _, article := range data {
+		item := ListItem{
+			ID:        article.ID,
+			Title:     article.Title,
+			Image:     article.Image,
+			ImageURL:  utils.GetArticleImageURL(article.Image),
+			Status:    article.Status,
+			CreatedAt: article.CreatedAt,
+			UpdatedAt: article.UpdatedAt,
+			Tags:      article.Tags,
+		}
+		response = append(response, item)
+	}
+
+	return http.SuccessWithMeta(ctx, 200, response, params)
 }
 
 func (h *handler) GetDetails(ctx *fiber.Ctx) error {

@@ -32,7 +32,6 @@ func (r *repository) GetList(params *GetListParams) ([]models.Article, error) {
 
 	search := params.Search
 	status := params.Status
-	limit := params.Limit
 
 	if search != "" {
 		query.Where("title LIKE ?", "%"+search+"%")
@@ -42,11 +41,12 @@ func (r *repository) GetList(params *GetListParams) ([]models.Article, error) {
 		query.Where("status = ?", status)
 	}
 
-	query.Order(params.OrderBy + " " + params.Order)
-	query.Offset(utils.CalculateOffset(params.Page, limit))
-	query.Limit(limit)
-	// query.Select("id, title, image, status, createdAt, updatedAt")
-	query.Select([]string{"id", "title", "image", "status", "createdAt", "updatedAt"})
+	order := params.OrderBy + " " + params.Order
+	limit := params.Limit
+	offset := utils.CalculateOffset(params.Page, limit)
+
+	query.Order(order).Offset(offset).Limit(limit)
+	query.Select("id, title, image, status, createdAt, updatedAt")
 	query.Preload("Tags")
 
 	var data []models.Article
