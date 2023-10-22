@@ -7,7 +7,7 @@ import (
 )
 
 type IService interface {
-	GetList(params *GetListParams) ([]models.Article, error)
+	GetList(params *GetListParams) ([]ListItem, error)
 	GetDetails(id uint) (*models.Article, error)
 	Create(dto CreateDto) (*models.Article, error)
 	Update(id uint, dto UpdateDto) (*models.Article, error)
@@ -24,22 +24,34 @@ func NewService(repository IRepository) *service {
 	}
 }
 
-func (s *service) GetList(params *GetListParams) ([]models.Article, error) {
+func (s *service) GetList(params *GetListParams) ([]ListItem, error) {
 	// Test Errors
 	// return nil, fiber.NewError(fiber.StatusNotFound) // caught on fiber-config.go
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go
 	// panic("something went wrong") // caught on fiber-config.go only if enable app.Use(recover.New()) in main.go
 
+	var result []ListItem
+
 	data, err := s.repository.GetList(params)
 	if err != nil {
-		return data, err
+		return result, err
 	}
 
-	for i := range data {
-		data[i].ImageUrl = utils.GetArticleImageURL(data[i].Image)
+	for _, article := range data {
+		item := ListItem{
+			ID:        article.ID,
+			Title:     article.Title,
+			Image:     article.Image,
+			ImageURL:  utils.GetArticleImageURL(article.Image),
+			Status:    article.Status,
+			CreatedAt: article.CreatedAt,
+			UpdatedAt: article.UpdatedAt,
+			Tags:      article.Tags,
+		}
+		result = append(result, item)
 	}
 
-	return data, nil
+	return result, nil
 }
 
 func (s *service) GetDetails(id uint) (*models.Article, error) {
