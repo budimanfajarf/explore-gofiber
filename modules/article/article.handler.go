@@ -48,10 +48,14 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	data, err := h.service.GetList(params)
+	data, count, err := h.service.GetList(params)
 	if err != nil {
 		return err
 	}
+
+	println("count", count)
+	// @todo create helper function to generate pagination meta, but also include the query params
+	// meta := utils.GeneratePaginationMeta(params.Page, params.Limit, count, params)
 
 	return http.SuccessWithMeta(ctx, 200, data, params)
 }
