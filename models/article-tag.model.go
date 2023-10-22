@@ -7,7 +7,3 @@ type ArticleTag struct {
 	ArticleID uint `gorm:"column:articleId" json:"articleId"`
 	TagID     uint `gorm:"column:tagId" json:"tagId"`
 }
-
-// func (ArticleTag) TableName() string {
-// 	return "ArticleTag"
-// }
