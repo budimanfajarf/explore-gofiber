@@ -14,9 +14,9 @@ type IRepository interface {
 	FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
-	Create(dto CreateDto) (*models.Article, error)
+	Create(dto CreateDto) (models.Article, error)
 	CheckIsExist(id uint) (bool, error)
-	Update(id uint, dto UpdateDto) (*models.Article, error)
+	Update(id uint, dto UpdateDto) (models.Article, error)
 	Delete(id uint) error
 }
 
@@ -116,11 +116,11 @@ func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) 
 	return r.FindOne(dest, relations, "id = ?", id)
 }
 
-func (r *repository) Create(dto CreateDto) (*models.Article, error) {
+func (r *repository) Create(dto CreateDto) (models.Article, error) {
 	// fmt.Printf("%+v\n", dto)
 	// return nil, errors.New("not implemented")
 
-	article := &models.Article{
+	article := models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
 		Image:   dto.Image,
@@ -131,16 +131,16 @@ func (r *repository) Create(dto CreateDto) (*models.Article, error) {
 		},
 	}
 
-	err := r.db.Create(article).Error
+	err := r.db.Create(&article).Error
 	if err != nil {
-		return nil, err
+		return article, err
 	}
 
 	// Check if tags with given IDs exist in the database
 	var existingTags []models.Tag
 	err = r.db.Where("id IN (?)", dto.TagIDs).Find(&existingTags).Error
 	if err != nil {
-		return nil, err
+		return article, err
 	}
 
 	// Create a map to store existing tag IDs for fast lookup
@@ -160,14 +160,14 @@ func (r *repository) Create(dto CreateDto) (*models.Article, error) {
 			})
 		} else {
 			// Tag with this ID doesn't exist, handle the error or situation accordingly
-			return nil, fiber.NewError(400, "tag with ID "+strconv.Itoa(int(id))+" doesn't exist")
+			return article, fiber.NewError(400, "tag with ID "+strconv.Itoa(int(id))+" doesn't exist")
 		}
 	}
 
 	// Associate existing tags with the article
 	err = r.db.Model(&article).Association("Tags").Append(tagsToAssociate)
 	if err != nil {
-		return nil, err
+		return article, err
 	}
 
 	return article, nil
@@ -182,8 +182,8 @@ func (r *repository) CheckIsExist(id uint) (bool, error) {
 	return count > 0, nil
 }
 
-func (r *repository) Update(id uint, dto UpdateDto) (*models.Article, error) {
-	article := &models.Article{
+func (r *repository) Update(id uint, dto UpdateDto) (models.Article, error) {
+	article := models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
 		Image:   dto.Image,
@@ -193,9 +193,9 @@ func (r *repository) Update(id uint, dto UpdateDto) (*models.Article, error) {
 		},
 	}
 
-	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(article).Error
+	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(&article).Error
 	if err != nil {
-		return nil, err
+		return article, err
 	}
 
 	// to make sure the id returned
