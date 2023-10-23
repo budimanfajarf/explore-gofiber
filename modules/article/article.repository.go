@@ -3,9 +3,7 @@ package article
 import (
 	"explore-gofiber/models"
 	"explore-gofiber/utils"
-	"strconv"
 
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +12,7 @@ type IRepository interface {
 	FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
-	Create(dto CreateDto) (models.Article, error)
+	Create(dto CreateDto, tags []models.Tag) (models.Article, error)
 	CheckIsExist(id uint) (bool, error)
 	Update(id uint, dto UpdateDto) (models.Article, error)
 	Delete(id uint) error
@@ -116,7 +114,7 @@ func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) 
 	return r.FindOne(dest, relations, "id = ?", id)
 }
 
-func (r *repository) Create(dto CreateDto) (models.Article, error) {
+func (r *repository) Create(dto CreateDto, tags []models.Tag) (models.Article, error) {
 	// fmt.Printf("%+v\n", dto)
 	// return nil, errors.New("not implemented")
 
@@ -136,36 +134,7 @@ func (r *repository) Create(dto CreateDto) (models.Article, error) {
 		return article, err
 	}
 
-	// Check if tags with given IDs exist in the database
-	var existingTags []models.Tag
-	err = r.db.Where("id IN (?)", dto.TagIDs).Find(&existingTags).Error
-	if err != nil {
-		return article, err
-	}
-
-	// Create a map to store existing tag IDs for fast lookup
-	existingTagIDs := make(map[uint]bool)
-	for _, tag := range existingTags {
-		existingTagIDs[tag.ID] = true
-	}
-
-	var tagsToAssociate []models.Tag
-	for _, id := range dto.TagIDs {
-		// If the tag exists, associate it with the article
-		if _, exists := existingTagIDs[id]; exists {
-			tagsToAssociate = append(tagsToAssociate, models.Tag{
-				Base: models.Base{
-					ID: id,
-				},
-			})
-		} else {
-			// Tag with this ID doesn't exist, handle the error or situation accordingly
-			return article, fiber.NewError(400, "tag with ID "+strconv.Itoa(int(id))+" doesn't exist")
-		}
-	}
-
-	// Associate existing tags with the article
-	err = r.db.Model(&article).Association("Tags").Append(tagsToAssociate)
+	err = r.db.Model(&article).Association("Tags").Append(tags)
 	if err != nil {
 		return article, err
 	}

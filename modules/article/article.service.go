@@ -2,6 +2,7 @@ package article
 
 import (
 	"explore-gofiber/models"
+	"explore-gofiber/modules/tag"
 	"explore-gofiber/utils"
 )
 
@@ -15,11 +16,13 @@ type IService interface {
 
 type service struct {
 	repository IRepository
+	tagService tag.IService
 }
 
-func NewService(repository IRepository) *service {
+func NewService(repository IRepository, tagService tag.IService) *service {
 	return &service{
 		repository,
+		tagService,
 	}
 }
 
@@ -75,7 +78,16 @@ func (s *service) GetDetails(id uint) (models.Article, error) {
 }
 
 func (s *service) Create(dto CreateDto) (models.Article, error) {
-	data, err := s.repository.Create(dto)
+	data := models.Article{}
+
+	tags, err := s.tagService.FindAndCheckByIDs(dto.TagIDs)
+	if err != nil {
+		return data, err
+	}
+
+	// fmt.Printf("%+v\n", tags)
+
+	data, err = s.repository.Create(dto, tags)
 	if err != nil {
 		return data, err
 	}
