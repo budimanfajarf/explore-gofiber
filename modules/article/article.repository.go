@@ -3,7 +3,9 @@ package article
 import (
 	"explore-gofiber/models"
 	"explore-gofiber/utils"
+	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -49,7 +51,7 @@ func (r *repository) findAllQuery(args *FindAllArgs, selects []string, relations
 	if len(relations) > 0 {
 		for _, relation := range relations {
 			if relation != "" {
-				query = query.Preload(relation)
+				query.Preload(relation)
 			}
 		}
 	}
@@ -103,7 +105,7 @@ func (r *repository) FindOne(dest interface{}, relations []string, conds ...inte
 
 	if len(relations) > 0 {
 		for _, relation := range relations {
-			query = query.Preload(relation)
+			query.Preload(relation)
 		}
 	}
 
@@ -115,6 +117,9 @@ func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) 
 }
 
 func (r *repository) Create(dto CreateDto) (*models.Article, error) {
+	// fmt.Printf("%+v\n", dto)
+	// return nil, errors.New("not implemented")
+
 	article := &models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
@@ -127,8 +132,45 @@ func (r *repository) Create(dto CreateDto) (*models.Article, error) {
 	}
 
 	err := r.db.Create(article).Error
+	if err != nil {
+		return nil, err
+	}
 
-	return article, err
+	// Check if tags with given IDs exist in the database
+	var existingTags []models.Tag
+	err = r.db.Where("id IN (?)", dto.TagIDs).Find(&existingTags).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a map to store existing tag IDs for fast lookup
+	existingTagIDs := make(map[uint]bool)
+	for _, tag := range existingTags {
+		existingTagIDs[tag.ID] = true
+	}
+
+	var tagsToAssociate []models.Tag
+	for _, id := range dto.TagIDs {
+		// If the tag exists, associate it with the article
+		if _, exists := existingTagIDs[id]; exists {
+			tagsToAssociate = append(tagsToAssociate, models.Tag{
+				Base: models.Base{
+					ID: id,
+				},
+			})
+		} else {
+			// Tag with this ID doesn't exist, handle the error or situation accordingly
+			return nil, fiber.NewError(400, "tag with ID "+strconv.Itoa(int(id))+" doesn't exist")
+		}
+	}
+
+	// Associate existing tags with the article
+	err = r.db.Model(&article).Association("Tags").Append(tagsToAssociate)
+	if err != nil {
+		return nil, err
+	}
+
+	return article, nil
 }
 
 func (r *repository) CheckIsExist(id uint) (bool, error) {

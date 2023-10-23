@@ -18,10 +18,11 @@ type ListItem struct {
 }
 
 type CreateDto struct {
-	Title     string `validate:"required,min=5,max=150"`
-	Content   string `validate:"omitempty,html"`
-	Image     string `validate:"omitempty"`
-	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED"`
+	Title     string `validate:"required,min=5,max=150" json:"title"`
+	Content   string `validate:"omitempty,html" json:"content"`
+	Image     string `validate:"omitempty" json:"image"`
+	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED" json:"status"`
+	TagIDs    []uint `validate:"omitempty" json:"tagIDs"`
 	CreatedBy uint
 }
 
@@ -35,10 +36,10 @@ type FindAllArgs struct {
 }
 
 type UpdateDto struct {
-	Title     string `validate:"required,min=5,max=150"`
-	Content   string `validate:"omitempty,html"`
-	Image     string `validate:"omitempty"`
-	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED"`
+	Title     string `validate:"required,min=5,max=150" json:"title"`
+	Content   string `validate:"omitempty,html" json:"content"`
+	Image     string `validate:"omitempty" json:"image"`
+	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED" json:"status"`
 	UpdatedBy uint
 }
 
