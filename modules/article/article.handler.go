@@ -66,13 +66,13 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
-		return http.BadRequestException(ctx, "invalid article id")
+		return fiber.NewError(400, "invalid article id")
 	}
 
 	article, err := h.service.GetDetails(uint(id))
 	if err != nil {
 		if err.Error() == "record not found" {
-			return http.NotFoundException(ctx, "article not found")
+			return fiber.NewError(404, "article not found")
 		}
 
 		return err
@@ -85,7 +85,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 	dto := new(CreateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
-		return http.InvalidPayloadException(ctx, err.Error())
+		return fiber.NewError(400, err.Error())
 	}
 
 	authenticatedUserId := utils.GetUser(ctx)
@@ -103,7 +103,7 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 	dto := new(UpdateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
-		return http.InvalidPayloadException(ctx, err.Error())
+		return fiber.NewError(400, err.Error())
 	}
 
 	id, _ := ctx.ParamsInt("id") // no need to check error, already checked on CheckIfArticleExist middleware

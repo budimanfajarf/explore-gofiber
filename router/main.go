@@ -14,6 +14,6 @@ func SetUpRoutes(app *fiber.App) {
 	setUpRoutesV1(app)
 
 	app.Use(func(c *fiber.Ctx) error {
-		return http.NotFoundException(c)
+		return fiber.NewError(404)
 	})
 }

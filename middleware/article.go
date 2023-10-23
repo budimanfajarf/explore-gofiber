@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"explore-gofiber/http"
 	"explore-gofiber/modules"
 	"fmt"
 
@@ -13,7 +12,7 @@ func CheckIfArticleExist(ctx *fiber.Ctx) error {
 
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
-		return http.BadRequestException(ctx, "invalid article id")
+		return fiber.NewError(400, "invalid article id")
 	}
 
 	isArticleExist, err := articleRepository.CheckIsExist(uint(id))
@@ -22,7 +21,7 @@ func CheckIfArticleExist(ctx *fiber.Ctx) error {
 	}
 
 	if !isArticleExist {
-		return http.NotFoundException(ctx, fmt.Sprintf("article with id %d not exist", id))
+		return fiber.NewError(404, fmt.Sprintf("article with id %d not exist", id))
 	}
 
 	return ctx.Next()

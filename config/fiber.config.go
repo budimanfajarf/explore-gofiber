@@ -22,11 +22,11 @@ var FiberConfig = fiber.Config{
 
 		// Send custom error page
 		// err = ctx.Status(code).SendFile(fmt.Sprintf("./%d.html", code))
-		err = http.HttpException(ctx, code, err.Error())
+		err = http.Exception(ctx, code, err.Error())
 		if err != nil {
 			// In case the SendFile fails
 			// return ctx.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
-			return http.InternalServerErrorException(ctx)
+			return http.Exception(ctx, code)
 		}
 
 		// Return from handler

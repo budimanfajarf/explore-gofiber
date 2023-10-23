@@ -50,8 +50,7 @@ func (s *service) FindAndCheckByIDs(IDs []uint) ([]models.Tag, error) {
 	}
 
 	if len(invalidTagIDs) > 0 {
-		return tags, fiber.NewError(fiber.ErrBadRequest.Code, fmt.Sprintf("invalid tag IDs: %v", invalidTagIDs))
-		// return tags, http.InvalidPayloadException(ctx, fmt.Sprintf("invalid tag IDs: %v", invalidTagIDs))
+		return tags, fiber.NewError(400, fmt.Sprintf("invalid tag IDs: %v", invalidTagIDs))
 	}
 
 	return tags, nil
