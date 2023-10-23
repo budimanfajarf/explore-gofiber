@@ -32,7 +32,7 @@ func (s *service) GetList(args FindAllArgs) ([]ListItem, int64, error) {
 	// return nil, errors.New("something went wrong") // caught on fiber-config.go
 	// panic("something went wrong") // caught on fiber-config.go only if enable app.Use(recover.New()) in main.go
 
-	var result []ListItem
+	result := []ListItem{}
 
 	data, count, err := s.repository.FindAllAndCount(
 		args,
