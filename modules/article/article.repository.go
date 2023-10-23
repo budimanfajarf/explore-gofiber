@@ -10,8 +10,8 @@ import (
 )
 
 type IRepository interface {
-	FindAll(args *FindAllArgs, selects []string, relations []string) ([]models.Article, error)
-	FindAllAndCount(args *FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
+	FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error)
+	FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto) (*models.Article, error)
@@ -30,7 +30,7 @@ func NewRepository(db *gorm.DB) *repository {
 	}
 }
 
-func (r *repository) findAllQuery(args *FindAllArgs, selects []string, relations []string) *gorm.DB {
+func (r *repository) findAllQuery(args FindAllArgs, selects []string, relations []string) *gorm.DB {
 	query := r.db.Model(&models.Article{})
 
 	search := args.Search
@@ -59,7 +59,7 @@ func (r *repository) findAllQuery(args *FindAllArgs, selects []string, relations
 	return query
 }
 
-func (r *repository) FindAll(args *FindAllArgs, selects []string, relations []string) ([]models.Article, error) {
+func (r *repository) FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error) {
 	order := utils.GetOrderValue(args.OrderBy, args.Order)
 	limit := args.Limit
 	offset := utils.CalculateOffset(args.Page, limit)
@@ -76,7 +76,7 @@ func (r *repository) FindAll(args *FindAllArgs, selects []string, relations []st
 	return data, nil
 }
 
-func (r *repository) FindAllAndCount(args *FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
+func (r *repository) FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
 	order := utils.GetOrderValue(args.OrderBy, args.Order)
 	limit := args.Limit
 	offset := utils.CalculateOffset(args.Page, limit)
