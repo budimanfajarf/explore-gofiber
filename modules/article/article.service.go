@@ -72,7 +72,7 @@ func (s *service) GetDetails(id uint) (*models.Article, error) {
 	data.ImageUrl = utils.GetArticleImageURL(data.Image)
 
 	if data.Tags == nil {
-		data.Tags = []models.Tag{}
+		data.Tags = []models.Tag{} // make default value to empty array []
 	}
 
 	return data, nil
