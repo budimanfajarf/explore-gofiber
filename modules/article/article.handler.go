@@ -53,11 +53,25 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	println("count", count)
-	// @todo create helper function to generate pagination meta, but also include the query params
-	// meta := utils.GeneratePaginationMeta(params.Page, params.Limit, count, params)
+	paginationMeta := utils.GeneratePaginationMeta(count, params.Page, params.Limit)
 
-	return http.SuccessWithMeta(ctx, 200, data, params)
+	meta := GetListMeta{
+		Count:     paginationMeta.Count,
+		Page:      paginationMeta.Page,
+		Limit:     paginationMeta.Limit,
+		TotalPage: paginationMeta.TotalPage,
+		PrevPage:  paginationMeta.PrevPage,
+		NextPage:  paginationMeta.NextPage,
+		From:      paginationMeta.From,
+		To:        paginationMeta.To,
+		Links:     paginationMeta.Links,
+		OrderBy:   params.OrderBy,
+		Order:     params.Order,
+		Search:    params.Search,
+		Status:    params.Status,
+	}
+
+	return http.SuccessWithMeta(ctx, 200, data, meta)
 }
 
 func (h *handler) GetDetails(ctx *fiber.Ctx) error {

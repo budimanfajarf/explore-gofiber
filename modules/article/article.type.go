@@ -2,6 +2,7 @@ package article
 
 import (
 	"explore-gofiber/models"
+	"explore-gofiber/utils"
 	"time"
 )
 
@@ -39,4 +40,21 @@ type UpdateDto struct {
 	Image     string `validate:"omitempty"`
 	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED"`
 	UpdatedBy uint
+}
+
+// extended from utils.PaginationMeta
+type GetListMeta struct {
+	Count     int64                  `json:"count"`
+	Page      int                    `json:"page"`
+	Limit     int                    `json:"limit"`
+	TotalPage int                    `json:"totalPage"`
+	PrevPage  *int                   `json:"prevPage"`
+	NextPage  *int                   `json:"nextPage"`
+	From      int                    `json:"from"`
+	To        int                    `json:"to"`
+	Links     []utils.PaginationLink `json:"links"`
+	OrderBy   string                 `json:"orderBy"`
+	Order     string                 `json:"order"`
+	Search    string                 `json:"search"`
+	Status    string                 `json:"status"`
 }
