@@ -33,9 +33,6 @@ func (r *repository) findAllQuery(args *FindAllArgs, selects []string, relations
 
 	search := args.Search
 	status := args.Status
-	order := args.OrderBy + " " + args.Order
-	limit := args.Limit
-	offset := utils.CalculateOffset(args.Page, limit)
 
 	if search != "" {
 		query.Where("title LIKE ?", "%"+search+"%")
@@ -57,11 +54,15 @@ func (r *repository) findAllQuery(args *FindAllArgs, selects []string, relations
 		}
 	}
 
-	return query.Order(order).Offset(offset).Limit(limit)
+	return query
 }
 
 func (r *repository) FindAll(args *FindAllArgs, selects []string, relations []string) ([]models.Article, error) {
-	query := r.findAllQuery(args, selects, relations)
+	order := utils.GetOrderValue(args.OrderBy, args.Order)
+	limit := args.Limit
+	offset := utils.CalculateOffset(args.Page, limit)
+
+	query := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
 
 	var data []models.Article
 
@@ -74,12 +75,22 @@ func (r *repository) FindAll(args *FindAllArgs, selects []string, relations []st
 }
 
 func (r *repository) FindAllAndCount(args *FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
-	query := r.findAllQuery(args, selects, relations)
+	order := utils.GetOrderValue(args.OrderBy, args.Order)
+	limit := args.Limit
+	offset := utils.CalculateOffset(args.Page, limit)
+
+	dataQuery := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
+	countQuery := r.findAllQuery(args, selects, relations)
 
 	var data []models.Article
 	var count int64
 
-	err := query.Find(&data).Count(&count).Error
+	err := dataQuery.Find(&data).Error
+	if err != nil {
+		return data, count, err
+	}
+
+	err = countQuery.Count(&count).Error
 	if err != nil {
 		return data, count, err
 	}
