@@ -8,7 +8,7 @@ import (
 
 func SetUpRoutes(app *fiber.App) {
 	app.Get("/", func(c *fiber.Ctx) error {
-		return http.Success(c, 200, "Hello World")
+		return http.Response(c, 200, "Hello World")
 	})
 
 	setUpRoutesV1(app)

@@ -46,7 +46,7 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 
 	paginationMeta := utils.GeneratePaginationMeta(count, params.Page, params.Limit)
 
-	return http.SuccessWithMeta(ctx, 200, data, GetListMeta{
+	return http.ResponseWithMeta(ctx, 200, data, GetListMeta{
 		Count:     paginationMeta.Count,
 		Page:      paginationMeta.Page,
 		Limit:     paginationMeta.Limit,
@@ -78,7 +78,7 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 200, article)
+	return http.Response(ctx, 200, article)
 }
 
 func (h *handler) Create(ctx *fiber.Ctx) error {
@@ -96,7 +96,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 201, data)
+	return http.Response(ctx, 201, data)
 }
 
 func (h *handler) Update(ctx *fiber.Ctx) error {
@@ -114,7 +114,7 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 200, data)
+	return http.Response(ctx, 200, data)
 }
 
 func (h *handler) Delete(ctx *fiber.Ctx) error {
@@ -124,5 +124,5 @@ func (h *handler) Delete(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 200, "article deleted successfully")
+	return http.Response(ctx, 200, "article deleted successfully")
 }

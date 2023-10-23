@@ -32,5 +32,5 @@ func (h *handler) Login(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return http.Success(ctx, 200, data)
+	return http.Response(ctx, 200, data)
 }

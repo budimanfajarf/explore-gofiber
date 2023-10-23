@@ -8,16 +8,32 @@ import (
 	fiberUtils "github.com/gofiber/fiber/v2/utils"
 )
 
-func Success(ctx *fiber.Ctx, status int, data interface{}) error {
+func Response(ctx *fiber.Ctx, status int, data interface{}) error {
 	return ctx.Status(status).JSON(HttpResponse{
 		Data: data,
 	})
 }
 
-func SuccessWithMeta(ctx *fiber.Ctx, status int, data interface{}, meta interface{}) error {
+func ResponseWithMeta(ctx *fiber.Ctx, status int, data interface{}, meta interface{}) error {
 	return ctx.Status(status).JSON(HttpResponse{
 		Data: data,
 		Meta: meta,
+	})
+}
+
+func Exception(ctx *fiber.Ctx, status int, message ...string) error {
+	errorCode := StatusCodeStr(status)
+	errorMessage := fiberUtils.StatusMessage(status)
+
+	if len(message) > 0 {
+		errorMessage = message[0]
+	}
+
+	return ctx.Status(status).JSON(HttpResponse{
+		Error: &HttpError{
+			Code:    errorCode,
+			Message: errorMessage,
+		},
 	})
 }
 
@@ -40,20 +56,4 @@ func StatusCodeStr(status int) string {
 	}
 
 	return result.String()
-}
-
-func Exception(ctx *fiber.Ctx, status int, message ...string) error {
-	errorCode := StatusCodeStr(status)
-	errorMessage := fiberUtils.StatusMessage(status)
-
-	if len(message) > 0 {
-		errorMessage = message[0]
-	}
-
-	return ctx.Status(status).JSON(HttpResponse{
-		Error: &HttpError{
-			Code:    errorCode,
-			Message: errorMessage,
-		},
-	})
 }
