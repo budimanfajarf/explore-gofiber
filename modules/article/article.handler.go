@@ -1,8 +1,8 @@
 package article
 
 import (
-	"explore-gofiber/http"
 	"explore-gofiber/utils"
+	"explore-gofiber/utils/http"
 	"explore-gofiber/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"

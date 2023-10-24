@@ -2,11 +2,11 @@ package modules
 
 import (
 	"explore-gofiber/database"
-	"explore-gofiber/http"
 	"explore-gofiber/modules/admin"
 	"explore-gofiber/modules/article"
 	"explore-gofiber/modules/auth"
 	"explore-gofiber/modules/tag"
+	"explore-gofiber/utils/http"
 
 	"github.com/gofiber/fiber/v2"
 )

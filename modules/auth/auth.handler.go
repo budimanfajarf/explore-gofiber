@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"explore-gofiber/http"
 	"explore-gofiber/utils"
+	"explore-gofiber/utils/http"
 
 	"github.com/gofiber/fiber/v2"
 )
