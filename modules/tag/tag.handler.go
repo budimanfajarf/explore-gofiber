@@ -24,7 +24,7 @@ func (h *handler) getList(ctx *fiber.Ctx) error {
 		Order:   ctx.Query("order", "desc"),
 	}
 
-	tags, err := h.service.FindAll(params)
+	tags, err := h.service.GetList(params)
 	if err != nil {
 		return err
 	}
