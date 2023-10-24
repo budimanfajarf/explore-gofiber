@@ -7,10 +7,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type IHandler interface {
-	Login(ctx *fiber.Ctx) error
-}
-
 type handler struct {
 	service IService
 }

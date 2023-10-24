@@ -8,21 +8,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type IHandler interface {
-	GetList(ctx *fiber.Ctx) error
-	GetDetails(ctx *fiber.Ctx) error
-	Create(ctx *fiber.Ctx) error
-	Update(ctx *fiber.Ctx) error
-	Delete(ctx *fiber.Ctx) error
-}
-
 type handler struct {
 	service IService
 }
 
 func NewHandler(router fiber.Router, service IService) {
 	handler := &handler{
-		service: service,
+		service,
 	}
 
 	router.Get("/", handler.GetList)
