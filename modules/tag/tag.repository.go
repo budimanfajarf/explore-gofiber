@@ -3,13 +3,14 @@ package tag
 import (
 	"explore-gofiber/models"
 	"explore-gofiber/utils"
+	"fmt"
 
 	"gorm.io/gorm"
 )
 
 type IRepository interface {
 	FindByIDs(IDs []uint) ([]models.Tag, error)
-	FindAll(args FindAllArgs) ([]models.Tag, error)
+	FindAll(args FindAllArgs) ([]ListItem, error)
 }
 
 type repository struct {
@@ -32,11 +33,13 @@ func (r *repository) FindByIDs(IDs []uint) ([]models.Tag, error) {
 	return tags, nil
 }
 
-func (r *repository) FindAll(args FindAllArgs) ([]models.Tag, error) {
+func (r *repository) FindAll(args FindAllArgs) ([]ListItem, error) {
 	order := utils.GetOrderValue(args.OrderBy, args.Order)
 
-	var tags []models.Tag
-	err := r.db.Order(order).Find(&tags).Error
+	var tags []ListItem
+	err := r.db.Model(&models.Tag{}).Order(order).Find(&tags).Error
+	fmt.Printf("tags: %+v", tags)
+
 	if err != nil {
 		return tags, err
 	}
