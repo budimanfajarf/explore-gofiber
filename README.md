@@ -1,3 +1,3 @@
 My learning journey exploring Golang (Go Fiber), GORM, etc.
 
-### v1.1.1
+### v2.0.0
