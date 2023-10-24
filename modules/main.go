@@ -2,42 +2,43 @@ package modules
 
 import (
 	"explore-gofiber/database"
+	"explore-gofiber/http"
 	"explore-gofiber/modules/admin"
 	"explore-gofiber/modules/article"
 	"explore-gofiber/modules/auth"
 	"explore-gofiber/modules/tag"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-var (
-	// Repositories
-	ArticleRepository article.IRepository
-	AdminRepository   admin.IRepository
-	TagRepository     tag.IRepository
-
-	// Services
-	ArticleService article.IService
-	AuthService    auth.IService
-	TagService     tag.IService
-
-	// Handlers
-	ArticleHandler article.IHandler
-	AuthHandler    auth.IHandler
-)
-
-func Init() {
+func Init(app *fiber.App) {
 	mySqlDB := database.GormMySqlDBConn
 
-	// Repositories
-	ArticleRepository = article.NewRepository(mySqlDB)
-	AdminRepository = admin.NewRepository(mySqlDB)
-	TagRepository = tag.NewRepository(mySqlDB)
+	// Admin
+	adminRepository := admin.NewRepository(mySqlDB)
 
-	// Services
-	TagService = tag.NewService(TagRepository)
-	ArticleService = article.NewService(ArticleRepository, TagService)
-	AuthService = auth.NewService(AdminRepository)
+	// Auth
+	authService := auth.NewService(adminRepository)
 
-	// Handlers
-	ArticleHandler = article.NewHandler(ArticleService)
-	AuthHandler = auth.NewHandler(AuthService)
+	// Tag
+	tagRepository := tag.NewRepository(mySqlDB)
+	tagService := tag.NewService(tagRepository)
+
+	// Article
+	articleRepository := article.NewRepository(mySqlDB)
+	articleService := article.NewService(articleRepository, tagService)
+
+	// Routes & Handlers
+	app.Get("/", func(c *fiber.Ctx) error {
+		return http.Response(c, 200, "Hello World")
+	})
+
+	v1 := app.Group("/v1")
+
+	auth.NewHandler(v1.Group("/auth"), authService)
+	article.NewHandler(v1.Group("/articles"), articleService)
+
+	app.Use(func(c *fiber.Ctx) error {
+		return fiber.NewError(404)
+	})
 }

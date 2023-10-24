@@ -11,6 +11,7 @@ type IService interface {
 	GetDetails(id uint) (models.Article, error)
 	Create(dto CreateDto) (models.Article, error)
 	Update(id uint, dto UpdateDto) (models.Article, error)
+	CheckIsExist(id uint) (bool, error)
 	Delete(id uint) error
 }
 
@@ -19,7 +20,7 @@ type service struct {
 	tagService tag.IService
 }
 
-func NewService(repository IRepository, tagService tag.IService) *service {
+func NewService(repository IRepository, tagService tag.IService) IService {
 	return &service{
 		repository,
 		tagService,
@@ -93,6 +94,10 @@ func (s *service) Create(dto CreateDto) (models.Article, error) {
 	}
 
 	return s.GetDetails(data.ID)
+}
+
+func (s *service) CheckIsExist(id uint) (bool, error) {
+	return s.repository.CheckIsExist(id)
 }
 
 func (s *service) Update(id uint, dto UpdateDto) (models.Article, error) {

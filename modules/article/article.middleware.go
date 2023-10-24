@@ -1,21 +1,18 @@
-package middleware
+package article
 
 import (
-	"explore-gofiber/modules"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func CheckIfArticleExist(ctx *fiber.Ctx) error {
-	articleRepository := modules.ArticleRepository
-
+func (h *handler) checkIsExistMiddleware(ctx *fiber.Ctx) error {
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return fiber.NewError(400, "invalid article id")
 	}
 
-	isArticleExist, err := articleRepository.CheckIsExist(uint(id))
+	isArticleExist, err := h.service.CheckIsExist(uint(id))
 	if err != nil {
 		return err
 	}

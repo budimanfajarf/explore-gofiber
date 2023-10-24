@@ -1,4 +1,4 @@
-package middleware
+package auth
 
 import (
 	"explore-gofiber/utils/jwt"
@@ -8,7 +8,7 @@ import (
 )
 
 // Auth is the authentication middleware
-func Auth(c *fiber.Ctx) error {
+func AuthMiddleware(c *fiber.Ctx) error {
 	h := c.Get("Authorization")
 
 	if h == "" {
