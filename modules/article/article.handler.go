@@ -3,7 +3,6 @@ package article
 import (
 	"explore-gofiber/utils"
 	"explore-gofiber/utils/http"
-	"explore-gofiber/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,9 +18,9 @@ func NewHandler(router fiber.Router, service IService) {
 
 	router.Get("/", handler.getList)
 	router.Get("/:id", handler.getDetails)
-	router.Post("/", jwt.Middleware, handler.create)
-	router.Put("/:id", jwt.Middleware, handler.checkIsExistMiddleware, handler.update)
-	router.Delete("/:id", jwt.Middleware, handler.checkIsExistMiddleware, handler.delete)
+	router.Post("/", handler.create)
+	router.Put("/:id", handler.checkIsExistMiddleware, handler.update)
+	router.Delete("/:id", handler.checkIsExistMiddleware, handler.delete)
 }
 
 func (h *handler) getList(ctx *fiber.Ctx) error {
