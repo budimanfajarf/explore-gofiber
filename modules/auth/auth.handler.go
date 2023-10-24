@@ -15,10 +15,12 @@ type handler struct {
 	service IService
 }
 
-func NewHandler(service IService) *handler {
-	return &handler{
+func NewHandler(router fiber.Router, service IService) {
+	handler := &handler{
 		service,
 	}
+
+	router.Post("/login", handler.Login)
 }
 
 func (h *handler) Login(ctx *fiber.Ctx) error {

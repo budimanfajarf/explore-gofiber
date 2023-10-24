@@ -2,6 +2,7 @@ package article
 
 import (
 	"explore-gofiber/http"
+	"explore-gofiber/modules/auth"
 	"explore-gofiber/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,10 +20,16 @@ type handler struct {
 	service IService
 }
 
-func NewHandler(service IService) *handler {
-	return &handler{
-		service,
+func NewHandler(router fiber.Router, service IService) {
+	handler := &handler{
+		service: service,
 	}
+
+	router.Get("/", handler.GetList)
+	router.Get("/:id", handler.GetDetails)
+	router.Post("/", auth.AuthMiddleware, handler.Create)
+	router.Put("/:id", auth.AuthMiddleware, handler.checkIsExistMiddleware, handler.Update)
+	router.Delete("/:id", auth.AuthMiddleware, handler.checkIsExistMiddleware, handler.Delete)
 }
 
 func (h *handler) GetList(ctx *fiber.Ctx) error {
