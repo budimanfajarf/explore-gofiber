@@ -9,6 +9,8 @@ import (
 
 // @see https://docs.gofiber.io/guide/error-handling/
 var FiberConfig = fiber.Config{
+	AppName: "Explore Go Fiber",
+
 	// Override default error handler
 	ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 		// Status code defaults to 500
