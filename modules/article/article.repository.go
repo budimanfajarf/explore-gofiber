@@ -158,6 +158,9 @@ func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.A
 		Image:   dto.Image,
 		Status:  dto.Status,
 		BaseModel: models.BaseModel{
+			Base: models.Base{
+				ID: id,
+			},
 			UpdatedBy: dto.UpdatedBy,
 		},
 	}
@@ -167,8 +170,7 @@ func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.A
 		return article, err
 	}
 
-	// to make sure the id returned
-	article.ID = id
+	// fmt.Printf("%+v\n", article)
 
 	err = r.db.Model(&article).Association("Tags").Replace(tags)
 	if err != nil {
