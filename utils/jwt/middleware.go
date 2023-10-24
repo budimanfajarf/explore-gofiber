@@ -1,14 +1,13 @@
-package auth
+package jwt
 
 import (
-	"explore-gofiber/utils/jwt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // Auth is the authentication middleware
-func AuthMiddleware(c *fiber.Ctx) error {
+func Middleware(c *fiber.Ctx) error {
 	h := c.Get("Authorization")
 
 	if h == "" {
@@ -25,7 +24,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	// Verify the token which is in the chunks
-	user, err := jwt.Verify(chunks[1])
+	user, err := Verify(chunks[1])
 
 	if err != nil {
 		return fiber.ErrUnauthorized

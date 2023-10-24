@@ -10,6 +10,7 @@ import (
 type IService interface {
 	FindByIDs(IDs []uint) ([]models.Tag, error)
 	FindAndCheckByIDs(IDs []uint) ([]models.Tag, error)
+	GetList(args FindAllArgs) ([]ListItem, error)
 }
 
 type service struct {
@@ -23,12 +24,7 @@ func NewService(repository IRepository) *service {
 }
 
 func (s *service) FindByIDs(IDs []uint) ([]models.Tag, error) {
-	tags, err := s.repository.FindByIDs(IDs)
-	if err != nil {
-		return tags, err
-	}
-
-	return tags, nil
+	return s.repository.FindByIDs(IDs)
 }
 
 func (s *service) FindAndCheckByIDs(IDs []uint) ([]models.Tag, error) {
@@ -51,6 +47,16 @@ func (s *service) FindAndCheckByIDs(IDs []uint) ([]models.Tag, error) {
 
 	if len(invalidTagIDs) > 0 {
 		return tags, fiber.NewError(400, fmt.Sprintf("invalid tag IDs: %v", invalidTagIDs))
+	}
+
+	return tags, nil
+}
+
+func (s *service) GetList(args FindAllArgs) ([]ListItem, error) {
+	var tags []ListItem
+	err := s.repository.FindAll(&tags, args)
+	if err != nil {
+		return tags, err
 	}
 
 	return tags, nil

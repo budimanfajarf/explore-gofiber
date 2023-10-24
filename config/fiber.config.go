@@ -2,7 +2,7 @@ package config
 
 import (
 	"errors"
-	"explore-gofiber/http"
+	"explore-gofiber/utils/http"
 
 	"github.com/gofiber/fiber/v2"
 )

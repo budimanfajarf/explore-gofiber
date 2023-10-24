@@ -1,15 +1,11 @@
 package auth
 
 import (
-	"explore-gofiber/http"
 	"explore-gofiber/utils"
+	"explore-gofiber/utils/http"
 
 	"github.com/gofiber/fiber/v2"
 )
-
-type IHandler interface {
-	Login(ctx *fiber.Ctx) error
-}
 
 type handler struct {
 	service IService
@@ -20,10 +16,10 @@ func NewHandler(router fiber.Router, service IService) {
 		service,
 	}
 
-	router.Post("/login", handler.Login)
+	router.Post("/login", handler.login)
 }
 
-func (h *handler) Login(ctx *fiber.Ctx) error {
+func (h *handler) login(ctx *fiber.Ctx) error {
 	dto := new(LoginDto)
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
 		return err

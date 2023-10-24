@@ -2,11 +2,12 @@ package modules
 
 import (
 	"explore-gofiber/database"
-	"explore-gofiber/http"
 	"explore-gofiber/modules/admin"
 	"explore-gofiber/modules/article"
 	"explore-gofiber/modules/auth"
 	"explore-gofiber/modules/tag"
+	"explore-gofiber/utils/http"
+	"explore-gofiber/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -36,7 +37,8 @@ func Init(app *fiber.App) {
 	v1 := app.Group("/v1")
 
 	auth.NewHandler(v1.Group("/auth"), authService)
-	article.NewHandler(v1.Group("/articles"), articleService)
+	article.NewHandler(v1.Group("/articles").Use(jwt.Middleware), articleService)
+	tag.NewHandler(v1.Group("/tags"), tagService)
 
 	app.Use(func(c *fiber.Ctx) error {
 		return fiber.NewError(404)

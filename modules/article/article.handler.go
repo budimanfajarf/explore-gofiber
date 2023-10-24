@@ -1,20 +1,11 @@
 package article
 
 import (
-	"explore-gofiber/http"
-	"explore-gofiber/modules/auth"
 	"explore-gofiber/utils"
+	"explore-gofiber/utils/http"
 
 	"github.com/gofiber/fiber/v2"
 )
-
-type IHandler interface {
-	GetList(ctx *fiber.Ctx) error
-	GetDetails(ctx *fiber.Ctx) error
-	Create(ctx *fiber.Ctx) error
-	Update(ctx *fiber.Ctx) error
-	Delete(ctx *fiber.Ctx) error
-}
 
 type handler struct {
 	service IService
@@ -22,17 +13,17 @@ type handler struct {
 
 func NewHandler(router fiber.Router, service IService) {
 	handler := &handler{
-		service: service,
+		service,
 	}
 
-	router.Get("/", handler.GetList)
-	router.Get("/:id", handler.GetDetails)
-	router.Post("/", auth.AuthMiddleware, handler.Create)
-	router.Put("/:id", auth.AuthMiddleware, handler.checkIsExistMiddleware, handler.Update)
-	router.Delete("/:id", auth.AuthMiddleware, handler.checkIsExistMiddleware, handler.Delete)
+	router.Get("/", handler.getList)
+	router.Get("/:id", handler.getDetails)
+	router.Post("/", handler.create)
+	router.Put("/:id", handler.checkIsExistMiddleware, handler.update)
+	router.Delete("/:id", handler.checkIsExistMiddleware, handler.delete)
 }
 
-func (h *handler) GetList(ctx *fiber.Ctx) error {
+func (h *handler) getList(ctx *fiber.Ctx) error {
 	params := FindAllArgs{
 		Page:    ctx.QueryInt("page", 1),
 		Limit:   ctx.QueryInt("limit", 10),
@@ -70,7 +61,7 @@ func (h *handler) GetList(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h *handler) GetDetails(ctx *fiber.Ctx) error {
+func (h *handler) getDetails(ctx *fiber.Ctx) error {
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return fiber.NewError(400, "invalid article id")
@@ -88,7 +79,7 @@ func (h *handler) GetDetails(ctx *fiber.Ctx) error {
 	return http.Response(ctx, 200, article)
 }
 
-func (h *handler) Create(ctx *fiber.Ctx) error {
+func (h *handler) create(ctx *fiber.Ctx) error {
 	dto := new(CreateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
@@ -106,7 +97,7 @@ func (h *handler) Create(ctx *fiber.Ctx) error {
 	return http.Response(ctx, 201, data)
 }
 
-func (h *handler) Update(ctx *fiber.Ctx) error {
+func (h *handler) update(ctx *fiber.Ctx) error {
 	dto := new(UpdateDto)
 
 	if err := utils.ParseBodyAndValidate(ctx, dto); err != nil {
@@ -124,7 +115,7 @@ func (h *handler) Update(ctx *fiber.Ctx) error {
 	return http.Response(ctx, 200, data)
 }
 
-func (h *handler) Delete(ctx *fiber.Ctx) error {
+func (h *handler) delete(ctx *fiber.Ctx) error {
 	id, _ := ctx.ParamsInt("id")
 	err := h.service.Delete(uint(id))
 	if err != nil {
