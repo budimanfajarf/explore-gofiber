@@ -14,7 +14,7 @@ type IRepository interface {
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto, tags []models.Tag) (models.Article, error)
 	CheckIsExist(id uint) (bool, error)
-	Update(id uint, dto UpdateDto) (models.Article, error)
+	Update(id uint, dto UpdateDto, tags []models.Tag) (models.Article, error)
 	Delete(id uint) error
 }
 
@@ -151,7 +151,7 @@ func (r *repository) CheckIsExist(id uint) (bool, error) {
 	return count > 0, nil
 }
 
-func (r *repository) Update(id uint, dto UpdateDto) (models.Article, error) {
+func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.Article, error) {
 	article := models.Article{
 		Title:   dto.Title,
 		Content: dto.Content,
@@ -169,6 +169,11 @@ func (r *repository) Update(id uint, dto UpdateDto) (models.Article, error) {
 
 	// to make sure the id returned
 	article.ID = id
+
+	err = r.db.Model(&article).Association("Tags").Replace(tags)
+	if err != nil {
+		return article, err
+	}
 
 	return article, nil
 }

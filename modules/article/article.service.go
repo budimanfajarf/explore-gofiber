@@ -96,7 +96,14 @@ func (s *service) Create(dto CreateDto) (models.Article, error) {
 }
 
 func (s *service) Update(id uint, dto UpdateDto) (models.Article, error) {
-	data, err := s.repository.Update(id, dto)
+	data := models.Article{}
+
+	tags, err := s.tagService.FindAndCheckByIDs(dto.TagIDs)
+	if err != nil {
+		return data, err
+	}
+
+	data, err = s.repository.Update(id, dto, tags)
 	if err != nil {
 		return data, err
 	}

@@ -40,6 +40,7 @@ type UpdateDto struct {
 	Content   string `validate:"omitempty,html" json:"content"`
 	Image     string `validate:"omitempty" json:"image"`
 	Status    string `validate:"required,oneof=UNPUBLISHED PUBLISHED" json:"status"`
+	TagIDs    []uint `validate:"omitempty" json:"tagIDs"`
 	UpdatedBy uint
 }
 
