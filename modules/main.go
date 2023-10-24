@@ -38,6 +38,7 @@ func Init(app *fiber.App) {
 
 	auth.NewHandler(v1.Group("/auth"), authService)
 	article.NewHandler(v1.Group("/articles").Use(jwt.Middleware), articleService)
+	tag.NewHandler(v1.Group("/tags"), tagService)
 
 	app.Use(func(c *fiber.Ctx) error {
 		return fiber.NewError(404)

@@ -10,6 +10,7 @@ import (
 type IService interface {
 	FindByIDs(IDs []uint) ([]models.Tag, error)
 	FindAndCheckByIDs(IDs []uint) ([]models.Tag, error)
+	FindAll(args FindAllArgs) ([]models.Tag, error)
 }
 
 type service struct {
@@ -23,12 +24,7 @@ func NewService(repository IRepository) *service {
 }
 
 func (s *service) FindByIDs(IDs []uint) ([]models.Tag, error) {
-	tags, err := s.repository.FindByIDs(IDs)
-	if err != nil {
-		return tags, err
-	}
-
-	return tags, nil
+	return s.repository.FindByIDs(IDs)
 }
 
 func (s *service) FindAndCheckByIDs(IDs []uint) ([]models.Tag, error) {
@@ -54,4 +50,8 @@ func (s *service) FindAndCheckByIDs(IDs []uint) ([]models.Tag, error) {
 	}
 
 	return tags, nil
+}
+
+func (s *service) FindAll(args FindAllArgs) ([]models.Tag, error) {
+	return s.repository.FindAll(args)
 }
