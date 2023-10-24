@@ -3,6 +3,7 @@ package article
 import (
 	"explore-gofiber/models"
 	"explore-gofiber/utils"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -119,14 +120,12 @@ func (r *repository) Create(dto CreateDto, tags []models.Tag) (models.Article, e
 	// return nil, errors.New("not implemented")
 
 	article := models.Article{
-		Title:   dto.Title,
-		Content: dto.Content,
-		Image:   dto.Image,
-		Status:  dto.Status,
-		BaseModel: models.BaseModel{
-			CreatedBy: dto.CreatedBy,
-			UpdatedBy: dto.CreatedBy,
-		},
+		Title:     dto.Title,
+		Content:   dto.Content,
+		Image:     dto.Image,
+		Status:    dto.Status,
+		CreatedBy: dto.CreatedBy,
+		UpdatedBy: dto.CreatedBy,
 	}
 
 	err := r.db.Create(&article).Error
@@ -153,16 +152,12 @@ func (r *repository) CheckIsExist(id uint) (bool, error) {
 
 func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.Article, error) {
 	article := models.Article{
-		Title:   dto.Title,
-		Content: dto.Content,
-		Image:   dto.Image,
-		Status:  dto.Status,
-		BaseModel: models.BaseModel{
-			Base: models.Base{
-				ID: id,
-			},
-			UpdatedBy: dto.UpdatedBy,
-		},
+		ID:        id,
+		Title:     dto.Title,
+		Content:   dto.Content,
+		Image:     dto.Image,
+		Status:    dto.Status,
+		UpdatedBy: dto.UpdatedBy,
 	}
 
 	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(&article).Error
@@ -170,7 +165,7 @@ func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.A
 		return article, err
 	}
 
-	// fmt.Printf("%+v\n", article)
+	fmt.Printf("%+v\n", article)
 
 	err = r.db.Model(&article).Association("Tags").Replace(tags)
 	if err != nil {
