@@ -2,15 +2,13 @@ package article
 
 import (
 	"explore-gofiber/models"
-	"explore-gofiber/utils"
 	"fmt"
 
 	"gorm.io/gorm"
 )
 
 type IRepository interface {
-	FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error)
-	FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
+	FindAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto, tags []models.Tag) (models.Article, error)
@@ -29,59 +27,12 @@ func NewRepository(db *gorm.DB) IRepository {
 	}
 }
 
-func (r *repository) findAllQuery(args FindAllArgs, selects []string, relations []string) *gorm.DB {
-	query := r.db.Model(&models.Article{})
+func (r *repository) FindAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
+	dataQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
+	countQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
 
-	search := args.Search
-	status := args.Status
-
-	if search != "" {
-		query.Where("title LIKE ?", "%"+search+"%")
-	}
-
-	if status != "" {
-		query.Where("status = ?", status)
-	}
-
-	if len(selects) > 0 {
-		query.Select(selects)
-	}
-
-	if len(relations) > 0 {
-		for _, relation := range relations {
-			if relation != "" {
-				query.Preload(relation)
-			}
-		}
-	}
-
-	return query
-}
-
-func (r *repository) FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error) {
-	order := utils.GetOrderValue(args.OrderBy, args.Order)
-	limit := args.Limit
-	offset := utils.CalculateOffset(args.Page, limit)
-
-	query := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
-
-	var data []models.Article
-
-	err := query.Find(&data).Error
-	if err != nil {
-		return data, err
-	}
-
-	return data, nil
-}
-
-func (r *repository) FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
-	order := utils.GetOrderValue(args.OrderBy, args.Order)
-	limit := args.Limit
-	offset := utils.CalculateOffset(args.Page, limit)
-
-	dataQuery := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
-	countQuery := r.findAllQuery(args, selects, relations)
+	dataQuery.Scopes(OrderScope(args.OrderBy, args.Order), PaginationScope(args.Page, args.Limit))
+	dataQuery.Scopes(SelectScope(selects), RelationsScope(relations))
 
 	var data []models.Article
 	var count int64
@@ -100,15 +51,7 @@ func (r *repository) FindAllAndCount(args FindAllArgs, selects []string, relatio
 }
 
 func (r *repository) FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB {
-	query := r.db.Model(&models.Article{})
-
-	if len(relations) > 0 {
-		for _, relation := range relations {
-			query.Preload(relation)
-		}
-	}
-
-	return query.Take(dest, conds...)
+	return r.db.Model(&models.Article{}).Scopes(RelationsScope(relations)).Take(dest, conds...)
 }
 
 func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB {

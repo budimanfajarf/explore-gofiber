@@ -35,7 +35,7 @@ func (s *service) GetList(args FindAllArgs) ([]ListItem, int64, error) {
 
 	result := []ListItem{}
 
-	data, count, err := s.repository.FindAllAndCount(
+	data, count, err := s.repository.FindAndCount(
 		args,
 		[]string{"id", "title", "image", "status", "createdAt", "updatedAt"},
 		[]string{"Tags"},
