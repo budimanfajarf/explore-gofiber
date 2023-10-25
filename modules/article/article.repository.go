@@ -28,19 +28,27 @@ func NewRepository(db *gorm.DB) IRepository {
 }
 
 func (r *repository) FindAndCount(args FindArgs, selects []string, relations []string) ([]models.Article, int64, error) {
-	dataQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
-	countQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
-
-	dataQuery.Scopes(OrderScope(args.OrderBy, args.Order), PaginationScope(args.Page, args.Limit))
-	dataQuery.Scopes(SelectScope(selects), RelationsScope(relations))
-
 	var data []models.Article
 	var count int64
+
+	dataQuery := r.db.Model(&models.Article{}).Scopes(
+		StatusScope(args.Status),
+		SearchScope(args.Search),
+		OrderScope(args.OrderBy, args.Order),
+		PaginationScope(args.Page, args.Limit),
+		SelectScope(selects),
+		RelationsScope(relations),
+	)
 
 	err := dataQuery.Find(&data).Error
 	if err != nil {
 		return data, count, err
 	}
+
+	countQuery := r.db.Model(&models.Article{}).Scopes(
+		StatusScope(args.Status),
+		SearchScope(args.Search),
+	)
 
 	err = countQuery.Count(&count).Error
 	if err != nil {
