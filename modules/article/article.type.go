@@ -10,7 +10,7 @@ type ListItem struct {
 	ID        uint         `json:"id"`
 	Title     string       `json:"title"`
 	Image     string       `json:"image"`
-	ImageURL  string       `json:"imageUrl"`
+	ImageUrl  string       `json:"imageUrl"`
 	Status    string       `json:"status"`
 	CreatedAt time.Time    `json:"createdAt"`
 	UpdatedAt time.Time    `json:"updatedAt"`

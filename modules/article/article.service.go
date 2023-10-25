@@ -50,7 +50,7 @@ func (s *service) GetList(args FindAllArgs) ([]ListItem, int64, error) {
 			ID:        article.ID,
 			Title:     article.Title,
 			Image:     article.Image,
-			ImageURL:  utils.GetArticleImageURL(article.Image),
+			ImageUrl:  utils.GetArticleImageURL(article.Image),
 			Status:    article.Status,
 			CreatedAt: article.CreatedAt,
 			UpdatedAt: article.UpdatedAt,
