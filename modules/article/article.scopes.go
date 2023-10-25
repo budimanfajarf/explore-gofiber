@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SearchScope(search string) func(db *gorm.DB) *gorm.DB {
+func searchScope(search string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if search != "" {
 			return db.Where("title LIKE ?", "%"+search+"%")
@@ -15,22 +15,22 @@ func SearchScope(search string) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func StatusScope(status string) func(db *gorm.DB) *gorm.DB {
+func statusScope(status string) func(db *gorm.DB) *gorm.DB {
 	return scopes.StatusScope(status)
 }
 
-func OrderScope(orderBy string, order string) func(db *gorm.DB) *gorm.DB {
+func orderScope(orderBy string, order string) func(db *gorm.DB) *gorm.DB {
 	return scopes.OrderScope(orderBy, order)
 }
 
-func PaginationScope(page int, limit int) func(db *gorm.DB) *gorm.DB {
+func paginationScope(page int, limit int) func(db *gorm.DB) *gorm.DB {
 	return scopes.PaginationScope(page, limit)
 }
 
-func SelectScope(selects []string) func(db *gorm.DB) *gorm.DB {
+func selectScope(selects []string) func(db *gorm.DB) *gorm.DB {
 	return scopes.SelectScope(selects)
 }
 
-func RelationsScope(relations []string) func(db *gorm.DB) *gorm.DB {
+func relationsScope(relations []string) func(db *gorm.DB) *gorm.DB {
 	return scopes.RelationsScope(relations)
 }
