@@ -8,7 +8,7 @@ import (
 )
 
 type IRepository interface {
-	FindAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
+	FindAndCount(args FindArgs, selects []string, relations []string) ([]models.Article, int64, error)
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto, tags []models.Tag) (models.Article, error)
@@ -27,7 +27,7 @@ func NewRepository(db *gorm.DB) IRepository {
 	}
 }
 
-func (r *repository) FindAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
+func (r *repository) FindAndCount(args FindArgs, selects []string, relations []string) ([]models.Article, int64, error) {
 	dataQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
 	countQuery := r.db.Model(&models.Article{}).Scopes(StatusScope(args.Status), SearchScope(args.Search))
 
