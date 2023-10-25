@@ -32,12 +32,12 @@ func (r *repository) FindAndCount(args FindArgs, selects []string, relations []s
 	var count int64
 
 	dataQuery := r.db.Model(&models.Article{}).Scopes(
-		StatusScope(args.Status),
-		SearchScope(args.Search),
-		OrderScope(args.OrderBy, args.Order),
-		PaginationScope(args.Page, args.Limit),
-		SelectScope(selects),
-		RelationsScope(relations),
+		statusScope(args.Status),
+		searchScope(args.Search),
+		orderScope(args.OrderBy, args.Order),
+		paginationScope(args.Page, args.Limit),
+		selectScope(selects),
+		relationsScope(relations),
 	)
 
 	err := dataQuery.Find(&data).Error
@@ -46,8 +46,8 @@ func (r *repository) FindAndCount(args FindArgs, selects []string, relations []s
 	}
 
 	countQuery := r.db.Model(&models.Article{}).Scopes(
-		StatusScope(args.Status),
-		SearchScope(args.Search),
+		statusScope(args.Status),
+		searchScope(args.Search),
 	)
 
 	err = countQuery.Count(&count).Error
@@ -59,7 +59,7 @@ func (r *repository) FindAndCount(args FindArgs, selects []string, relations []s
 }
 
 func (r *repository) FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB {
-	return r.db.Model(&models.Article{}).Scopes(RelationsScope(relations)).Take(dest, conds...)
+	return r.db.Model(&models.Article{}).Scopes(relationsScope(relations)).Take(dest, conds...)
 }
 
 func (r *repository) FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB {
