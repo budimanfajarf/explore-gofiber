@@ -8,7 +8,7 @@ import (
 
 type IRepository interface {
 	FindByIDs(IDs []uint) ([]models.Tag, error)
-	FindAll(result interface{}, args FindAllArgs) error
+	FindAll(result interface{}, args FindArgs) error
 }
 
 type repository struct {
@@ -31,7 +31,7 @@ func (r *repository) FindByIDs(IDs []uint) ([]models.Tag, error) {
 	return tags, nil
 }
 
-func (r *repository) FindAll(result interface{}, args FindAllArgs) error {
+func (r *repository) FindAll(result interface{}, args FindArgs) error {
 	// note:
 	// don't add "&" in result, e.g "&result", it will throw stack error
 	// because already add "&" on the service layer (see tag.service.go->GetList)
