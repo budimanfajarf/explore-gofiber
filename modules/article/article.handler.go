@@ -24,7 +24,7 @@ func NewHandler(router fiber.Router, service IService) {
 }
 
 func (h *handler) getList(ctx *fiber.Ctx) error {
-	params := FindAllArgs{
+	params := FindArgs{
 		Page:    ctx.QueryInt("page", 1),
 		Limit:   ctx.QueryInt("limit", 10),
 		OrderBy: ctx.Query("orderBy", "id"),

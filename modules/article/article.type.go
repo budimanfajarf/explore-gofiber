@@ -10,7 +10,7 @@ type ListItem struct {
 	ID        uint         `json:"id"`
 	Title     string       `json:"title"`
 	Image     string       `json:"image"`
-	ImageURL  string       `json:"imageUrl"`
+	ImageUrl  string       `json:"imageUrl"`
 	Status    string       `json:"status"`
 	CreatedAt time.Time    `json:"createdAt"`
 	UpdatedAt time.Time    `json:"updatedAt"`
@@ -26,7 +26,7 @@ type CreateDto struct {
 	CreatedBy uint
 }
 
-type FindAllArgs struct {
+type FindArgs struct {
 	Page    int    `validate:"omitempty,min=1" default:"1" json:"page"`
 	Limit   int    `validate:"omitempty,min=1" json:"limit"`
 	OrderBy string `validate:"omitempty,oneof=id title createdAt updatedAt image status" json:"orderBy"`
