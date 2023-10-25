@@ -19,7 +19,7 @@ func NewHandler(router fiber.Router, service IService) {
 }
 
 func (h *handler) getList(ctx *fiber.Ctx) error {
-	params := FindAllArgs{
+	params := FindArgs{
 		OrderBy: ctx.Query("orderBy", "id"),
 		Order:   ctx.Query("order", "desc"),
 	}
