@@ -34,30 +34,32 @@ func (s *service) GetList(args FindAllArgs) ([]ListItem, int64, error) {
 	// panic("something went wrong") // caught on fiber-config.go only if enable app.Use(recover.New()) in main.go
 
 	result := []ListItem{}
+	count := int64(0)
 
-	data, count, err := s.repository.FindAllAndCount(
+	err := s.repository.FindAllAndCount(
 		args,
-		[]string{"id", "title", "image", "status", "createdAt", "updatedAt"},
 		[]string{"Tags"},
+		&result,
+		&count,
 	)
 
 	if err != nil {
 		return result, count, err
 	}
 
-	for _, article := range data {
-		item := ListItem{
-			ID:        article.ID,
-			Title:     article.Title,
-			Image:     article.Image,
-			ImageURL:  utils.GetArticleImageURL(article.Image),
-			Status:    article.Status,
-			CreatedAt: article.CreatedAt,
-			UpdatedAt: article.UpdatedAt,
-			Tags:      article.Tags,
-		}
-		result = append(result, item)
-	}
+	// for _, article := range data {
+	// 	item := ListItem{
+	// 		ID:        article.ID,
+	// 		Title:     article.Title,
+	// 		Image:     article.Image,
+	// 		ImageUrl:  utils.GetArticleImageURL(article.Image),
+	// 		Status:    article.Status,
+	// 		CreatedAt: article.CreatedAt,
+	// 		UpdatedAt: article.UpdatedAt,
+	// 		Tags:      article.Tags,
+	// 	}
+	// 	result = append(result, item)
+	// }
 
 	return result, count, nil
 }

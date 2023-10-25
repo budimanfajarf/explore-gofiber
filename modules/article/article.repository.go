@@ -9,8 +9,8 @@ import (
 )
 
 type IRepository interface {
-	FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error)
-	FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error)
+	FindAll(args FindAllArgs, relations []string, result interface{}) error
+	FindAllAndCount(args FindAllArgs, relations []string, result interface{}, resultCount *int64) error
 	FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB
 	FindOneByID(dest interface{}, id uint, relations []string) *gorm.DB
 	Create(dto CreateDto, tags []models.Tag) (models.Article, error)
@@ -29,7 +29,7 @@ func NewRepository(db *gorm.DB) IRepository {
 	}
 }
 
-func (r *repository) findAllQuery(args FindAllArgs, selects []string, relations []string) *gorm.DB {
+func (r *repository) findAllQuery(args FindAllArgs, relations []string) *gorm.DB {
 	query := r.db.Model(&models.Article{})
 
 	search := args.Search
@@ -43,10 +43,6 @@ func (r *repository) findAllQuery(args FindAllArgs, selects []string, relations 
 		query.Where("status = ?", status)
 	}
 
-	if len(selects) > 0 {
-		query.Select(selects)
-	}
-
 	if len(relations) > 0 {
 		for _, relation := range relations {
 			if relation != "" {
@@ -58,45 +54,36 @@ func (r *repository) findAllQuery(args FindAllArgs, selects []string, relations 
 	return query
 }
 
-func (r *repository) FindAll(args FindAllArgs, selects []string, relations []string) ([]models.Article, error) {
+func (r *repository) FindAll(args FindAllArgs, relations []string, result interface{}) error {
 	order := utils.GetOrderValue(args.OrderBy, args.Order)
 	limit := args.Limit
 	offset := utils.CalculateOffset(args.Page, limit)
 
-	query := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
-
-	var data []models.Article
-
-	err := query.Find(&data).Error
-	if err != nil {
-		return data, err
-	}
-
-	return data, nil
+	query := r.findAllQuery(args, relations).Order(order).Offset(offset).Limit(limit)
+	return query.Find(result).Error
 }
 
-func (r *repository) FindAllAndCount(args FindAllArgs, selects []string, relations []string) ([]models.Article, int64, error) {
+func (r *repository) FindAllAndCount(args FindAllArgs, relations []string, result interface{}, resultCount *int64) error {
 	order := utils.GetOrderValue(args.OrderBy, args.Order)
 	limit := args.Limit
 	offset := utils.CalculateOffset(args.Page, limit)
 
-	dataQuery := r.findAllQuery(args, selects, relations).Order(order).Offset(offset).Limit(limit)
-	countQuery := r.findAllQuery(args, selects, relations)
+	dataQuery := r.findAllQuery(args, relations).Order(order).Offset(offset).Limit(limit)
+	countQuery := r.findAllQuery(args, relations)
 
-	var data []models.Article
-	var count int64
-
-	err := dataQuery.Find(&data).Error
+	err := dataQuery.Find(result).Error
 	if err != nil {
-		return data, count, err
+		return err
 	}
 
-	err = countQuery.Count(&count).Error
+	fmt.Printf("%+v\n", result)
+
+	err = countQuery.Count(resultCount).Error
 	if err != nil {
-		return data, count, err
+		return err
 	}
 
-	return data, count, err
+	return err
 }
 
 func (r *repository) FindOne(dest interface{}, relations []string, conds ...interface{}) *gorm.DB {
