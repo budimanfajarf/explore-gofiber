@@ -5,6 +5,7 @@ import (
 	"explore-gofiber/database"
 	"explore-gofiber/modules"
 
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -18,6 +19,8 @@ func main() {
 	app := fiber.New(config.FiberConfig)
 	app.Use(logger.New(config.LoggerConfig))
 	// app.Use(recover.New()) // disable it to avoid confusion when getting runtime errors
+
+	app.Use(swagger.New())
 
 	modules.Init(app)
 
