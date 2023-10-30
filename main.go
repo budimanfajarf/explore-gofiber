@@ -20,7 +20,15 @@ func main() {
 	app.Use(logger.New(config.LoggerConfig))
 	// app.Use(recover.New()) // disable it to avoid confusion when getting runtime errors
 
-	app.Use(swagger.New())
+	app.Use(swagger.New(swagger.Config{
+		Next:     nil,
+		BasePath: "/",
+		FilePath: "./docs/swagger.json",
+		Path:     "docs",
+		Title:    "Explore Go Fiber API documentation",
+		// CacheAge: 3600, // Default to 1 hour
+		CacheAge: 0,
+	}))
 
 	modules.Init(app)
 
