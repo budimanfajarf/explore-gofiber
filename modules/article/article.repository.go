@@ -138,7 +138,16 @@ func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.A
 			return err
 		}
 
-		if err := tx.Model(&article).Association("Tags").Replace(tags); err != nil {
+		// // It sometimes duplicating relation table items, the "ArticleTag"
+		// if err := tx.Model(&article).Association("Tags").Replace(tags); err != nil {
+		// 	return err
+		// }
+
+		if err := tx.Model(&article).Association("Tags").Clear(); err != nil {
+			return err
+		}
+
+		if err := tx.Model(&article).Association("Tags").Append(tags); err != nil {
 			return err
 		}
 
