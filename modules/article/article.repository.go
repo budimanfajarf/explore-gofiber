@@ -79,12 +79,26 @@ func (r *repository) Create(dto CreateDto, tags []models.Tag) (models.Article, e
 		UpdatedBy: dto.CreatedBy,
 	}
 
-	err := r.db.Create(&article).Error
-	if err != nil {
-		return article, err
-	}
+	// err := r.db.Create(&article).Error
+	// if err != nil {
+	// 	return article, err
+	// }
 
-	err = r.db.Model(&article).Association("Tags").Append(tags)
+	// err = r.db.Model(&article).Association("Tags").Append(tags)
+
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&article).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&article).Association("Tags").Append(tags); err != nil {
+			return err
+		}
+
+		// return errors.New("something went wrong on transaction") // test error on transaction, when error appeared, db should rollback and not create article and associate tags
+		return nil
+	})
+
 	if err != nil {
 		return article, err
 	}
