@@ -2,7 +2,6 @@ package article
 
 import (
 	"explore-gofiber/models"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -79,12 +78,26 @@ func (r *repository) Create(dto CreateDto, tags []models.Tag) (models.Article, e
 		UpdatedBy: dto.CreatedBy,
 	}
 
-	err := r.db.Create(&article).Error
-	if err != nil {
-		return article, err
-	}
+	// err := r.db.Create(&article).Error
+	// if err != nil {
+	// 	return article, err
+	// }
 
-	err = r.db.Model(&article).Association("Tags").Append(tags)
+	// err = r.db.Model(&article).Association("Tags").Append(tags)
+
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&article).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&article).Association("Tags").Append(tags); err != nil {
+			return err
+		}
+
+		// return errors.New("something went wrong on transaction") // test error on transaction, when error appeared, db should rollback and not create article and associate tags
+		return nil
+	})
+
 	if err != nil {
 		return article, err
 	}
@@ -111,14 +124,37 @@ func (r *repository) Update(id uint, dto UpdateDto, tags []models.Tag) (models.A
 		UpdatedBy: dto.UpdatedBy,
 	}
 
-	err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(&article).Error
-	if err != nil {
-		return article, err
-	}
+	// err := r.db.Model(&models.Article{}).Where("id = ?", id).Updates(&article).Error
+	// if err != nil {
+	// 	return article, err
+	// }
 
-	fmt.Printf("%+v\n", article)
+	// fmt.Printf("%+v\n", article)
 
-	err = r.db.Model(&article).Association("Tags").Replace(tags)
+	// err = r.db.Model(&article).Association("Tags").Replace(tags)
+
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(&models.Article{}).Where("id = ?", id).Updates(&article).Error; err != nil {
+			return err
+		}
+
+		// // It sometimes duplicating relation table items, the "ArticleTag"
+		// if err := tx.Model(&article).Association("Tags").Replace(tags); err != nil {
+		// 	return err
+		// }
+
+		if err := tx.Model(&article).Association("Tags").Clear(); err != nil {
+			return err
+		}
+
+		if err := tx.Model(&article).Association("Tags").Append(tags); err != nil {
+			return err
+		}
+
+		// return errors.New("something went wrong on transaction") // test error on transaction, when error appeared, db should rollback and not update the article and not replace the associate tags
+		return nil
+	})
+
 	if err != nil {
 		return article, err
 	}
